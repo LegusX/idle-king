@@ -1,0 +1,125 @@
+#header {
+	margin: 0;
+	padding: 0;
+	/*top: 0;*/
+	width: 100%;
+	min-height: fit-content;
+	display: inline-block;
+}
+
+.headeritems:hover {
+	cursor: pointer;
+	background-color: black;
+	color: white;
+	/*highlight: none;*/
+}
+
+.headeritems {
+	float: left;
+	padding: 0 10px;
+	display: block;
+}
+
+#inventory {
+	float: right;
+	height: fit-content;
+	width: fit-content;
+	border: 2px solid;
+	padding: 0 10px;
+	margin-right: 5px;
+}
+
+#maincontent {
+	width: auto;
+}
+
+.resourcebuttons {
+	width: fit-content;
+	height: fit-content;
+	padding: 0 5px;
+	display: block;
+/*Thanks to this stack overflow answer: https://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting-using-css*/
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+.resourcebuttons:hover {
+	cursor: pointer;
+	background-color: black;
+	color: white;
+}
+
+#resourcebuttons {
+	border: 2px solid;
+	display: inline-block;
+	width: fit-content;
+	padding: 0 10px;
+}
+#construction {
+	border: 2px solid;
+	display: inline-block;
+	width: fit-content;
+	padding: 0 10px;
+}
+
+#messagebar {
+	border: 2px solid;
+	float: left;
+	/*display: inline-block;*/
+	width: fit-content;
+	padding: 0 10px;
+	max-width: 200px;
+	margin-right: 5px;
+}
+#buildingcount {
+	border: 2px solid;
+	width: fit-content;
+	padding: 0 10px;
+	float: right;
+	margin-right: 5px;
+}
+
+/*.modal {*/
+/*	border: 2px solid;*/
+/*	width: 50%;*/
+/*	height: fit-content;*/
+/*	position: fixed;*/
+/*	transform: translate(50%);*/
+/*	z-index: 1;*/
+/*  overflow: scroll;*/
+/*  right: 40%;*/
+/*  bottom: 40%;*/
+/*  position: relative;*/
+/*  z-index: 2;*/
+/*  width: 200px;*/
+/*  height: 300px;*/
+/*  background-color: white;*/
+/*}*/
+
+.modalcontent {
+    max-width: 50%;
+    height: fit-content;
+    padding: 10px;
+    margin: 0 auto;
+    transform: translateY(50%);
+    box-shadow: 2px 3px 5px -1px #000000;
+    background-color: white;
+}
+
+.modalcontainer {
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    right: 0;
+    background-color: rgb(89, 89, 89);
+    background-color: rgba(89, 89, 89, 0.5);
+    position: fixed;
+    /*display: none;*/
+}
+
+body {
+	padding: 0;
+	margin: 0;
+}
