@@ -1,6 +1,7 @@
 window.gameStats = {
+	running: 1,
 	inventory: {
-		wood: 0,
+		wood: 20,
 		stone: 0,
 		wheat: 0,
 		gold: 0
@@ -74,14 +75,14 @@ window.buildings = [
 			},
 			{
 				type: "message", //which event to launch
-				value: "I did warn you", //what value it should launch
+				value: "The narrator has burned down all of your wood huts.", //what value it should launch
 				when: 30, //At how many purchases should it be launched
 				change: {
 					operation: "subtract", // same as normal change
 					high: "buildings", //which global variable to change
 					what: "Wood Hut", //Name of building to change amount of
 					which: "amount",
-					by: Math.floor(Math.random() * (15 - 5)) + 5
+					by: 31
 				}
 				//0 based index
 			},

