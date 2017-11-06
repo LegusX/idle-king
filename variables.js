@@ -30,6 +30,11 @@ window.gameStats = {
 	}
 }
 
+window.settings = {
+	maxmessages: 15,
+	autosaveTime: 0.1
+}
+
 window.buildings = [
 	{
 		name: "Wood Hut",
@@ -39,39 +44,46 @@ window.buildings = [
 		resources: [
 			{
 				name: "wood",
-				value: 20
+				value: 20, //This value changes every time a new building is bought
+				base: 20 //This will never change and is the starting value for cost
 			}
 		],
+		multi: 1.1, //How much the resource costs should be multiplied by whenever a new building is bought
 		event: [
 			{
 				type: "message", //which event to launch
 				value: "After several seconds of extremely hard work, you built your well desereved new hut. Congratulations", //what value it should launch
-				when: 0 //At how many purchases should it be launched
+				when: 0, //At how many purchases should it be launched
 				//0 based index
+				launched: false
 			},
 			{
 				type: "newtab",
 				value: "A Wood Hut",
 				when: 0,
-				extra: "home" //what tab to change or just extra info that event needs.
+				extra: "home", //what tab to change or just extra info that event needs.
+				launched: false
 			},
 			{
 				type: "message", //which event to launch
 				value: "Okay, that's enough huts. You can stop now", //what value it should launch
-				when: 9 //At how many purchases should it be launched
+				when: 9, //At how many purchases should it be launched
 				//0 based index
+				launched: false
 			},
 			{
 				type: "message", //which event to launch
 				value: "Seriously, you're starting to embaress me. Just stop it.", //what value it should launch
-				when: 19 //At how many purchases should it be launched
+				when: 19, //At how many purchases should it be launched
 				//0 based index
+				launched: false
 			},
 			{
 				type: "message", //which event to launch
 				value: "If you build even one more hut, I will set them on fire, one by one.", //what value it should launch
-				when: 29 //At how many purchases should it be launched
+				when: 29, //At how many purchases should it be launched
 				//0 based index
+				launched: false
 			},
 			{
 				type: "message", //which event to launch
@@ -83,9 +95,17 @@ window.buildings = [
 					what: "Wood Hut", //Name of building to change amount of
 					which: "amount",
 					by: 31
-				}
+				},
+				launched: false
 				//0 based index
 			},
+			{
+				type: "achieve",
+				value: "He did warn you.",
+				extra: "The narrator burned down your hideous wood huts.",
+				when: 3,
+				launched: false
+			}
 		],
 		changes: []
 	}

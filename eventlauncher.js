@@ -7,14 +7,22 @@
 //Look, there's a reason I warned you not to try and make updates to this thing. It won't be easy. o_O
 
 function launchEvent(event, amount) {
-	if(event.when !== amount || event.when === -1) return;
+	try {
+	if(event.when !== amount || event.when === -1) return event;
+	if(event.launched) return event;
+	console.log(event.type)
 	switch (event.type) {
 		case "message": {
-			newMessage(event, amount)
+			newMessage(event)
 			break;
 		}
 		case "newtab": {
-			editTab(event, amount)
+			editTab(event)
+			break;
+		}
+		case "achieve": {
+			console.log("PLEASE JUST WORK")
+			achieve(event)
 			break;
 		}
 		default: {
@@ -22,10 +30,11 @@ function launchEvent(event, amount) {
 		}
 	}
 	if (event.change !== undefined) {
-		console.log(event.change)
 		launchChange(event.change)
 	}
-	return;
+	event.launched = true
+	}catch(e){console.log(e)}
+	return event;
 }
 
 function launchChange(change) {
@@ -67,11 +76,11 @@ function launchChange(change) {
 		if (!building) return console.warn("Building: "+change.what+" cannot be found")
 		switch (change.operation) {
 			case "multiply": {
-				building[change.which] = window.gameStats[change.what][change.which]*change.by
+				building[change.which] = building[change.which]*change.by
 				break;
 			}
 			case "divide": {
-				building[change.which] = window.gameStats[change.what][change.which]/change.by
+				building[change.which] = building[change.which]/change.by
 				break;
 			}
 			case "add": {
@@ -86,26 +95,34 @@ function launchChange(change) {
 				console.warn("Cannot launch change with operation: "+change.operation)
 			}
 		}
+		if (change.which === "amount") {
+			for (k=0; k<building.resources.length; k++) {
+				building.resources[k].value = Math.ceil(building.resources[k].base*Math.pow(building.multi, building.amount))
+				window.buildings[i] = building
+			}
+		}
 	}
 	return;
 }
 
-function newMessage(event, amount) {
+function newMessage(event) {
+	try{
 	messagebar = document.getElementById("messagebar")
 	if(messagebar.style.display==="none") messagebar.style.display = ""
 	
 	var newMessage = document.createElement("p")
 	newMessage.textContent = event.value
 	
-	if(messagebar.childNodes.length>15) {
+	while(messagebar.childNodes.length>window.settings.maxmessages-1) {
 		messagebar.removeChild(messagebar.lastChild)
 	}
-	messagebar.appendChild(newMessage)
-	
+	if (messagebar.childNodes.length === 0) messagebar.appendChild(newMessage)
+	else messagebar.insertBefore(newMessage, messagebar.childNodes[0])
+	}catch(e){console.log(e)}
 	return;
 }
 
-function editTab(event, amount) {
+function editTab(event) {
 	try {
 	if (!event.extra) return console.warn("Event: "+event+" lacks the 'extra' property.")
 	if (!document.getElementById(event.extra)) return console.warn("Event: "+event+" was not passed with a valid 'extra' property.")
@@ -115,4 +132,24 @@ function editTab(event, amount) {
 	return;
 	}
 	catch(e){console.log(e)}
+}
+
+function achieve(event) {
+	console.log("CHECK")
+	try {
+	newAchieve = document.createElement("div")
+	title = document.createElement("h4")
+	descrip = document.createElement("p")
+	newAchieve.classList.add("achievement")
+	newAchieve.classList.add("fadein")
+	title.textContent = event.value
+	title.style.cssText = "text-align: center;"
+	descrip.textContent = event.extra
+	newAchieve.appendChild(title)
+	newAchieve.appendChild(descrip)
+	newAchieve.addEventListener("click", function(e){
+		e.target.remove()
+	})
+	document.getElementById("achievebar").appendChild(newAchieve)
+	}catch(e){console.log(e)}
 }

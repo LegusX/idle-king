@@ -21,10 +21,23 @@
 				<br><br>
 			</div>
 		</div>
+		<div id="settingsmodalcontainer" class="modalcontainer">
+			<div class="modalcontent" style="transform: translateY(40%);">
+				<h3 style="text-align: center;">Settings</h3>
+				<p>Maximum number of messages:</p>
+				<input id="maxmessages" type="number" class="settingsinput">
+				<br>
+				<p>Autosave every</p><input id="autosavetime" type="number"><p> minutes</p>
+				<h4 class="resourcebuttons" style="float: left; margin: 10px;" id="settingscancel">Cancel</h4>
+				<h4 class="resourcebuttons" style="float: right; margin: 10px;" id="settingsapply">Apply</h4>
+				<br><br>
+			</div>
+		</div>
 		<div id="header">
 			<div id="workers" class="headeritems"><h3>Workforce</h3></div>
 			<div id="home" class="headeritems"><h3>Your Hut</h3></div>
 			<div id="research" class="headeritems"><h3>Research</h3></div>
+			<div><button class="headeritems" onclick="javascript:window.localStorage.removeItem('savedata');location.reload(true)">delete save data</button></div>
 			<div id="settings" class="headeritems" style="float: right;"><h3>Settings</h3></div>
 			<div id="stats" class="headeritems" style="float: right;"><h3>Stats</h3></div>
 			<div id="rewards" class="headeritems" style="float: right;"><h3>Rewards</h3></div>
@@ -36,6 +49,7 @@
 			<h4 id="wheatcount">Wheat: </h4>
 			<h4 id="goldcount">Gold: </h4>
 		</div>
+		<div id="achievebar"></div>
 		<div id="buildingcount"></div>
 		<div id="maincontent">
 			<div id="mainhome">
