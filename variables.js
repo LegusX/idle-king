@@ -86,6 +86,13 @@ window.buildings = [
 				launched: false
 			},
 			{
+				type: "achieve",
+				value: "He did warn you.",
+				extra: "The narrator burned down your hideous wood huts.",
+				when: 30,
+				launched: false
+			},
+			{
 				type: "message", //which event to launch
 				value: "The narrator has burned down all of your wood huts.", //what value it should launch
 				when: 30, //At how many purchases should it be launched
@@ -99,13 +106,6 @@ window.buildings = [
 				launched: false
 				//0 based index
 			},
-			{
-				type: "achieve",
-				value: "He did warn you.",
-				extra: "The narrator burned down your hideous wood huts.",
-				when: 3,
-				launched: false
-			}
 		],
 		changes: []
 	}
