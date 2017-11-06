@@ -150,6 +150,9 @@ function achieve(event) {
 	newAchieve.addEventListener("click", function(e){
 		e.target.remove()
 	})
+	setTimeout(function(){
+		document.getElementById("achievebar").firstChild.remove()
+	}, 1000*15)
 	document.getElementById("achievebar").appendChild(newAchieve)
 	}catch(e){console.log(e)}
 }
