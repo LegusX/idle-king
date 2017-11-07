@@ -7,17 +7,33 @@
 	display: inline-block;
 }
 
+.header {
+	margin: 0;
+	padding: 0;
+	/*top: 0;*/
+	width: 100%;
+	min-height: fit-content;
+	display: inline-block;
+	/*height: fit-content;*/
+}
+
 .headeritems:hover {
 	cursor: pointer;
 	background-color: black;
 	color: white;
-	/*highlight: none;*/
 }
 
 .headeritems {
 	float: left;
 	padding: 0 10px;
+	/*height: 10px;*/
 	display: block;
+	margin: 0;
+/*Thanks to this stack overflow answer: https://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting-using-css*/
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
 
 #inventory {

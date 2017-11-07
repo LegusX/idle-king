@@ -65,8 +65,23 @@ function setup() {
 	//because you're waiting for inspiration to hit you and tell you what you have been doing wrong this entire time with the code...
 	//Yeah.
 	//I should probably stop that...
-	["settingsmodalcontainer", "rewardsmodalcontainer", "workers", "buildingcount", "home", "research", "construction", "inventory", "messagebar", "gatherstone", "gathergold", "gatherwheat", "mainresearch", "mainworkers"].forEach(function(item){
+	["statsmodalcontent", "statsmodalcontainer", "settingsmodalcontainer", "rewardsmodalcontainer", "workers", "buildingcount", "home", "research", "construction", "inventory", "messagebar", "gatherstone", "gathergold", "gatherwheat", "mainresearch", "mainworkers"].forEach(function(item){
 		document.getElementById(item).style.display = "none";
+	});
+	
+	document.getElementById("stats").addEventListener("click", function(){
+		document.getElementById("statsmodalcontainer").style.display = "";
+		document.getElementById("statsmodalcontent").style.display = "";
+	});
+	
+	document.getElementById("statsheader").addEventListener("click", function(){
+		document.getElementById("statsmodalcontent").style.display = "";
+		document.getElementById("achievemodalcontent").style.display = "none"
+	});
+	
+	document.getElementById("achievements").addEventListener("click", function(){
+		document.getElementById("statsmodalcontent").style.display = "none";
+		document.getElementById("achievemodalcontent").style.display = ""
 	});
 	
 	document.getElementById("rewards").addEventListener("click", function(){

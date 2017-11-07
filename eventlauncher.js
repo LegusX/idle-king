@@ -154,5 +154,9 @@ function achieve(event) {
 		document.getElementById("achievebar").firstChild.remove()
 	}, 1000*15)
 	document.getElementById("achievebar").appendChild(newAchieve)
+	achievementItem = document.createElement("p")
+	achievementItem.textContent = event.value
+	achievementItem.title = event.extra
+	document.getElementById("achievemodalcontent").appendChild(achievementItem)
 	}catch(e){console.log(e)}
 }
