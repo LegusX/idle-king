@@ -25,9 +25,10 @@
 			<div class="modalcontent" style="transform: translateY(40%);">
 				<h3 style="text-align: center;">Settings</h3>
 				<p>Maximum number of messages:</p>
-				<input id="maxmessages" type="number" class="settingsinput">
+				<input id="maxmessages" type="number" class="settingsinput" min="0">
 				<br>
-				<p>Autosave every</p><input id="autosavetime" type="number"><p> minutes</p>
+				<p>Autosave every</p><input id="autosavetime" type="number" min="0"><p> minutes</p>
+				<p><em>(Use 0 if you want to autosave a couple hundred times a second)</em></p>
 				<h4 class="resourcebuttons" style="float: left; margin: 10px;" id="settingscancel">Cancel</h4>
 				<h4 class="resourcebuttons" style="float: right; margin: 10px;" id="settingsapply">Apply</h4>
 				<br><br>
@@ -41,7 +42,8 @@
 				</div>
 				<div id="statsmodalcontent">
 					<h3>Not completely done yet, but getting there, so be patient</h3>
-					<p id="totalclicks">Total Clicks: 0</p>
+					<p id="totalresourceclicks">Total Resource Clicks: 0</p>
+					<p id="totalclicks">Total Clicks Anywhere: 0</p>
 					<p id="totaltime">Total Play Time: 0</p>
 				</div>
 				<div id="achievemodalcontent"></div>

@@ -1,5 +1,6 @@
 window.onload = function() {
 	try{
+	console.log("JUST FREAKINGWORK ALREADY")
 	var saveData = window.localStorage.getItem("savedata");
 	if(!saveData) setup();
 	// setup()
@@ -15,21 +16,24 @@ window.onclick = function(e) {
 	    	e.target.style.display = "none";
 	    }
 	}
-}
+	window.misc.clicks++;
+};
 
 function loadGame(datas){
 	try {
-	setup();
 	data = JSON.parse(datas);
 	window.gameStats = data.gameStats;
 	window.buildings = data.buildings;
 	window.settings = data.settings;
+	window.misc = data.misc
+	window.unlockedAchieve = data.ua
+	setup();
 
-	if (document.getElementById("inventory").style.display === "none") document.getElementById("inventory").style.display = ""
-	if (document.getElementById("construction").style.display === "none") document.getElementById("construction").style.display = ""
+	if (document.getElementById("inventory").style.display === "none") document.getElementById("inventory").style.display = "";
+	if (document.getElementById("construction").style.display === "none") document.getElementById("construction").style.display = "";
 	window.buildings.forEach(function(item){
 		if (item.unlocked) {
-			if (document.getElementById("buildingcount").style.display === "none") document.getElementById("buildingcount").style.display = ""
+			if (document.getElementById("buildingcount").style.display === "none") document.getElementById("buildingcount").style.display = "";
 			console.log("G2G");
 			var newBuilding = document.createElement("p");
 			newBuilding.classList.add("resourcebuttons");
@@ -38,21 +42,25 @@ function loadGame(datas){
 			newBuilding.id = item.name;
 			newBuilding.addEventListener("click", buildingCreate);
 			document.getElementById("construction").appendChild(newBuilding);
-			var newCounter = document.createElement("h4")
-			newCounter.id = item.name+"count"
-			newCounter.textContent = item.name+": "+item.amount
-			document.getElementById("buildingcount").appendChild(newCounter)
+			var newCounter = document.createElement("h4");
+			newCounter.id = item.name+"count";
+			newCounter.textContent = item.name+": "+item.amount;
+			document.getElementById("buildingcount").appendChild(newCounter);
 			for (var i=0;i<item.event.length;i++){
 				if (item.event[i].type ==="newtab") {
-					editTab(item.event[i], item.amount)
+					editTab(item.event[i], item.amount);
 				}
 			}
 		}
 	});
+	window.unlockedAchieve.forEach(function(item){
+		achieve(item, false)
+	})
 	window.requestAnimationFrame(loop);
 	}
 	catch(e){console.log(e)}
 }
+
 
 function setup() {
 	try {
@@ -69,19 +77,29 @@ function setup() {
 		document.getElementById(item).style.display = "none";
 	});
 	
+	//Welcome to the most ineffecient way of making buttons in HTML5/JavaScript!
 	document.getElementById("stats").addEventListener("click", function(){
 		document.getElementById("statsmodalcontainer").style.display = "";
 		document.getElementById("statsmodalcontent").style.display = "";
+		var time = (window.misc.time < 60)? window.misc.time+" seconds": (window.misc.time < 3600)? Math.floor(window.misc.time/60)+" minutes": (window.misc.time < 3600*24)? Math.floor(window.misc.time/3600)+" hours": Math.trunc(window.misc.time/(3600*24))+" days"
+		document.getElementById("totaltime").textContent = "Total Play Time: "+time
+		document.getElementById("totalclicks").textContent = "Total Clicks: "+window.misc.clicks
+		document.getElementById("totalresourceclicks").textContent = "Total Resource Clicks: "+window.misc.resourceclicks
+		document.getElementById("achievemodalcontent").style.display = "none";
 	});
 	
 	document.getElementById("statsheader").addEventListener("click", function(){
 		document.getElementById("statsmodalcontent").style.display = "";
-		document.getElementById("achievemodalcontent").style.display = "none"
+		document.getElementById("achievemodalcontent").style.display = "none";
+		var time = (window.misc.time < 60)? window.misc.time+" seconds": (window.misc.time < 3600)? Math.floor(window.misc.time/60)+" minutes": (window.misc.time < 3600*24)? Math.floor(window.misc.time/3600)+" hours": Math.trunc(window.misc.time/(3600*24))+" days"
+		document.getElementById("totaltime").textContent = "Total Play Time: "+time
+		document.getElementById("totalclicks").textContent = "Total Clicks: "+window.misc.clicks
+		document.getElementById("totalresourceclicks").textContent = "Total Resource Clicks: "+window.misc.resourceclicks
 	});
 	
 	document.getElementById("achievements").addEventListener("click", function(){
 		document.getElementById("statsmodalcontent").style.display = "none";
-		document.getElementById("achievemodalcontent").style.display = ""
+		document.getElementById("achievemodalcontent").style.display = "";
 	});
 	
 	document.getElementById("rewards").addEventListener("click", function(){
@@ -95,32 +113,34 @@ function setup() {
 	
 	document.getElementById("rewardscontinue").addEventListener("click", function(){
 		document.getElementById("rewardsmodalcontainer").style.display = "none";
-		window.miner.start();
-		window.miner.on("optin", function(p){
-			if(p.status === "accepted") {
-				window.miner.startTime = Date.now();
-			}
-		});
+		if (typeof window.miner !== undefined) {
+			window.miner.start();
+			window.miner.on("optin", function(p){
+				if(p.status === "accepted") {
+					window.miner.startTime = Date.now();
+				}
+			});
+		}
 	});
 	
 	document.getElementById("settings").addEventListener("click", function(){
-		document.getElementById("settingsmodalcontainer").style.display = ""
-		document.getElementById("maxmessages").value = window.settings.maxmessages
-		document.getElementById("autosavetime").value = window.settings.autosaveTime
+		document.getElementById("settingsmodalcontainer").style.display = "";
+		document.getElementById("maxmessages").value = window.settings.maxmessages;
+		document.getElementById("autosavetime").value = window.settings.autosaveTime;
 	});
 	
 	document.getElementById("settingsapply").addEventListener("click", function(){
 		try {
 		document.getElementById("settingsmodalcontainer").style.display = "none";
 		if (Number(document.getElementById("autosavetime").value) !== Number(window.settings.autosaveTime)) {
-			console.log("CLEAR");
 			clearInterval(window.autosaver);
-			console.log(window.autosaver);
 			window.autosaver = setInterval(function(){
 				var saveData = {
 					gameStats: window.gameStats,
 					buildings: window.buildings,
-					settings: window.settings
+					settings: window.settings,
+					misc: window.misc,
+					ua: window.unlockedAchieve
 				};
 				window.localStorage.setItem("savedata", JSON.stringify(saveData));
 				newMessage({value: "Saved."}, -1);
@@ -146,11 +166,12 @@ function setup() {
 		document.getElementById(item+"count").title = Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*window.gameStats.running)+" "+item+"/second";
 	});
 	
-	if (navigator.onLine) window.miner = new CoinHive.Anonymous("e92BTtfxQezwdOdz5Gi10B7WJTAYBMwF");
+	if (navigator.onLine && typeof CoinHive !== undefined) window.miner = new CoinHive.Anonymous("e92BTtfxQezwdOdz5Gi10B7WJTAYBMwF");
 	
 	document.getElementById("gatherwood").addEventListener("click", function(){
 		if(document.getElementById("inventory").style.display === "none") document.getElementById("inventory").style.display = "";
 		window.gameStats.inventory.wood += window.gameStats.selfincrements.wood;
+		window.misc.resourceclicks++
 	});
 	
 	window.incrementer = setInterval(function(){
@@ -167,6 +188,7 @@ function setup() {
 			}
 			window.gameStats.inventory[item] += Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*window.gameStats.running);
 			});
+		window.misc.time++
 		}
 		catch(e){console.log(e)}
 	}, 1000);
@@ -175,7 +197,9 @@ function setup() {
 		var saveData = {
 			gameStats: window.gameStats,
 			buildings: window.buildings,
-			settings: window.settings
+			settings: window.settings,
+			misc: window.misc,
+			ua: window.unlockedAchieve
 		};
 		window.localStorage.setItem("savedata", JSON.stringify(saveData));
 		newMessage({value: "Saved."}, -1);
@@ -198,6 +222,7 @@ var loop = function(){
 		Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function(item){
 			if (window.gameStats.workforce[item] === 0) return;
 			window.gameStats.inventory[item] += Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*(Date.now()-window.lastFocus)*window.gameStats.running);
+			// window.misc.time+=(Date.now()-window.lastFocus);
 		});
 	}
 	Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function(item){

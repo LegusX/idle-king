@@ -1,5 +1,6 @@
 window.gameStats = {
 	running: 1,
+	version: "0.0.1",
 	inventory: {
 		wood: 20,
 		stone: 0,
@@ -27,12 +28,22 @@ window.gameStats = {
 		stone: 1,
 		wheat: 1,
 		gold: 1,
+	},
+	misc: {
+		time: 0,
+		clicks: 0
 	}
 }
 
 window.settings = {
 	maxmessages: 15,
 	autosaveTime: 0.1
+}
+
+window.misc = {
+	time: 0,
+	clicks: 0,
+	resourceclicks: 0
 }
 
 window.buildings = [
@@ -73,7 +84,7 @@ window.buildings = [
 			},
 			{
 				type: "message", //which event to launch
-				value: "Seriously, you're starting to embaress me. Just stop it.", //what value it should launch
+				value: "Seriously, you're starting to embarrass me. Just stop it.", //what value it should launch
 				when: 19, //At how many purchases should it be launched
 				//0 based index
 				launched: false
@@ -105,8 +116,11 @@ window.buildings = [
 				},
 				launched: false
 				//0 based index
-			},
+			}
 		],
 		changes: []
 	}
 ]
+
+window.unlockedAchieve = []
+window.achievements = []

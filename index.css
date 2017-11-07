@@ -164,6 +164,13 @@ body {
     padding: 5px;
 }
 
+.achievementlist {
+	border: 1px solid;
+	display: inline-block;
+	width: fit-content;
+	padding: 0 10px;
+}
+
 @-webkit-keyframes animatetop {
     from {opacity:0}
     to {opacity:1}
