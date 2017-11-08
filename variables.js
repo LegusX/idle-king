@@ -1,6 +1,7 @@
+window.version = "0.0.2"
 window.gameStats = {
 	running: 1,
-	version: "0.0.1",
+	version: "0.0.2",
 	inventory: {
 		wood: 20,
 		stone: 0,
@@ -136,7 +137,7 @@ window.buildings = [
 		event: [
 			{
 				type:"message",
-				value: "Hey, look! You can press three buttons now!",
+				value: "Hey, look! You can press four buttons now!",
 				when: 0,
 				launched: false
 			}
@@ -145,9 +146,24 @@ window.buildings = [
 			if (document.getElementById("gatherstone").style.display !== "none") return;
 			document.getElementById("gatherstone").style.display = ""
 			document.getElementById("gatherstone").addEventListener("click", function(){
-				window.gameStats.inventory.stone+=window.gameStats.selfincrements.wood
+				if (window.buildings[1].amount !== 1) {
+					window.gameStats.inventory.stone+=window.gameStats.selfincrements.stone
+				}
+				else {
+					window.gameStats.selfincrements.stone--
+					window.gameStats.inventory.stone++
+				}
 			})
-		}
+		},
+		changes: [
+			{
+				high: "gameStats",
+				what: "selfincrements",
+				which: "stone",
+				operation: "add",
+				by: 0.25
+			}
+		]
 	}
 ]
 

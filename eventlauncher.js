@@ -36,6 +36,7 @@ function launchEvent(event, amount) {
 }
 
 function launchChange(change) {
+	try {
 	if(Object.getOwnPropertyNames(change).length < 4) return console.warn("Does not have correct number of change attributes");
 	if(change.high === "gameStats") {
 		switch (change.operation) {
@@ -100,6 +101,7 @@ function launchChange(change) {
 			}
 		}
 	}
+	}catch(e){console.log(e)}
 	return;
 }
 

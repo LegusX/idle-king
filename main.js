@@ -1,7 +1,7 @@
 window.onload = function() {
 	try{
 	var saveData = window.localStorage.getItem("savedata");
-	if(!saveData) setup();
+	if(!saveData) newGame();
 	// setup()
 	else loadGame(saveData);
 	}
@@ -18,9 +18,20 @@ window.onclick = function(e) {
 	window.misc.clicks++;
 };
 
+function newGame(){
+	//Left this here in case I ever need other new game interaction, like getting the user's name, civilization name, and so forth.
+	setup()
+	window.requestAnimationFrame(loop)
+}
+
 function loadGame(datas){
 	try {
 	data = JSON.parse(datas);
+	if (data.gameStats.version !== window.version) {
+		window.localStorage.removeItem("savedata")
+		alert("Hey there, sorry, but it looks like your current save data doesn't work with this version of the game! \n\nUnfortunately, backwards compatibility of game data is sketchy at best, so the game will automatically delete your save data now in order to not break anything. \n\nSorry about that. :/")
+		return newGame()
+	}
 	window.gameStats = data.gameStats;
 	window.buildings = data.buildings;
 	window.settings = data.settings;
@@ -107,12 +118,14 @@ function setup() {
 	
 	document.getElementById("rewardscancel").addEventListener("click", function(){
 		document.getElementById("rewardsmodalcontainer").style.display = "none";
-		window.miner.stop();
+		if (typeof window.miner !== "undefined") {
+			window.miner.stop();
+		}
 	});
 	
 	document.getElementById("rewardscontinue").addEventListener("click", function(){
 		document.getElementById("rewardsmodalcontainer").style.display = "none";
-		if (typeof window.miner !== undefined) {
+		if (typeof window.miner !== "undefined") {
 			window.miner.start();
 			window.miner.on("optin", function(p){
 				if(p.status === "accepted") {
@@ -165,7 +178,7 @@ function setup() {
 		document.getElementById(item+"count").title = Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*window.gameStats.running)+" "+item+"/second";
 	});
 	
-	if (navigator.onLine && typeof CoinHive !== undefined) window.miner = new CoinHive.Anonymous("e92BTtfxQezwdOdz5Gi10B7WJTAYBMwF");
+	if (navigator.onLine && typeof CoinHive !== "undefined") window.miner = new CoinHive.Anonymous("e92BTtfxQezwdOdz5Gi10B7WJTAYBMwF");
 	
 	document.getElementById("gatherwood").addEventListener("click", function(){
 		if(document.getElementById("inventory").style.display === "none") document.getElementById("inventory").style.display = "";
@@ -179,10 +192,10 @@ function setup() {
 			if (window.gameStats.workforce[item] === 0) return;
 			
 			var running;
-			if (navigator.onLine && window.miner.isRunning()) window.gameStats.running = 1.3;
+			if (typeof window.miner !== "undefined" && navigator.onLine && window.miner.isRunning()) window.gameStats.running = 1.3;
 			else window.gameStats.running = 1;
 			
-			if (navigator.onLine && Date.now()-window.miner.startTime > 3600 && window.miner.isRunning()) {
+			if (typeof window.miner !== "undefined" && navigator.onLine && Date.now()-window.miner.startTime > 3600 && window.miner.isRunning()) {
 				window.gameStats.running = Math.floor((Date.now()-window.miner.startTime)/3600)*0.05+1.3;
 			}
 			window.gameStats.inventory[item] += Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*window.gameStats.running);
@@ -204,7 +217,6 @@ function setup() {
 		newMessage({value: "Saved."}, -1);
 	}, 1000*60*window.settings.autosaveTime);
 	
-	window.requestAnimationFrame(loop);
 	}
 	catch(e){console.log(e)}
 	return;
@@ -221,7 +233,7 @@ var loop = function(){
 		Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function(item){
 			if (window.gameStats.workforce[item] === 0) return;
 			window.gameStats.inventory[item] += Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*(Date.now()-window.lastFocus)*window.gameStats.running);
-			// window.misc.time+=(Date.now()-window.lastFocus);
+			window.misc.time+=(Date.now()-window.lastFocus);
 		});
 	}
 	Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function(item){
