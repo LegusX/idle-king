@@ -1,6 +1,5 @@
 window.onload = function() {
 	try{
-	console.log("JUST FREAKINGWORK ALREADY")
 	var saveData = window.localStorage.getItem("savedata");
 	if(!saveData) setup();
 	// setup()
@@ -290,6 +289,7 @@ function getRandomInt(min, max) {
 }
 
 var buildingCreate = function(e){
+	try {
 	var self = e.target
 	if (e.target.style.cursor === "not-allowed") return;
 	for(var i=0; i<window.buildings.length; i++) {
@@ -297,8 +297,10 @@ var buildingCreate = function(e){
 			for(var j=0; j<window.buildings[i].resources.length; j++) {
 				if (window.gameStats.inventory[window.buildings[i].resources[j].name] >= window.buildings[i].resources[j].value) {
 					window.gameStats.inventory[window.buildings[i].resources[j].name] -= window.buildings[i].resources[j].value
-					for(var k=0; k<window.buildings[i].event.length; k++) {
-						window.buildings[i].event[k] = launchEvent(window.buildings[i].event[k], window.buildings[i].amount)
+					if (typeof window.buildings[i].event !== "undefined") {
+						for(var k=0; k<window.buildings[i].event.length; k++) {
+							window.buildings[i].event[k] = launchEvent(window.buildings[i].event[k], window.buildings[i].amount)
+						}
 					}
 					window.buildings[i].amount++
 					if (window.buildings[i].amount === 1 && document.getElementById(window.buildings[i].name+"count") === null) {
@@ -311,15 +313,21 @@ var buildingCreate = function(e){
 					else {
 						document.getElementById(window.buildings[i].name+"count").textContent = window.buildings[i].name+": "+window.buildings[i].amount
 					}
-					for (k=0; k<window.buildings[i].changes.length; k++) {
-						launchChange(window.buildings[i].changes[k])
+					if (typeof window.buildings[i].changes !== "undefined") {
+						for (k=0; k<window.buildings[i].changes.length; k++) {
+							launchChange(window.buildings[i].changes[k])
+						}
 					}
 					for (k=0; k<window.buildings[i].resources.length; k++) {
 						window.buildings[i].resources[k].value = Math.ceil(window.buildings[i].resources[k].base*Math.pow(window.buildings[i].multi, window.buildings[i].amount))
+					}
+					if(typeof window.buildings[i].execute !== "undefined") {
+						window.buildings[i].execute()
 					}
 				}
 			}
 			i = window.buildings.length
 		}
 	}
+	}catch(e){console.log(e)}
 }

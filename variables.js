@@ -119,6 +119,35 @@ window.buildings = [
 			}
 		],
 		changes: []
+	},
+	{
+		name: "Mine",
+		amount: 0,
+		max: 0,
+		unlocked: false,
+		resources: [
+			{
+				name: "wood",
+				value: 40,
+				base: 40
+			}
+		],
+		multi: 1.1,
+		event: [
+			{
+				type:"message",
+				value: "Hey, look! You can press three buttons now!",
+				when: 0,
+				launched: false
+			}
+		],
+		execute: function(){
+			if (document.getElementById("gatherstone").style.display !== "none") return;
+			document.getElementById("gatherstone").style.display = ""
+			document.getElementById("gatherstone").addEventListener("click", function(){
+				window.gameStats.inventory.stone+=window.gameStats.selfincrements.wood
+			})
+		}
 	}
 ]
 
