@@ -41,10 +41,10 @@ function loadGame(datas){
 
 	if (document.getElementById("inventory").style.display === "none") document.getElementById("inventory").style.display = "";
 	if (document.getElementById("construction").style.display === "none") document.getElementById("construction").style.display = "";
+	
 	window.buildings.forEach(function(item){
 		if (item.unlocked) {
 			if (document.getElementById("buildingcount").style.display === "none") document.getElementById("buildingcount").style.display = "";
-			console.log("G2G");
 			var newBuilding = document.createElement("p");
 			newBuilding.classList.add("resourcebuttons");
 			newBuilding.classList.add("noselect");
@@ -63,9 +63,24 @@ function loadGame(datas){
 			}
 		}
 	});
+	
 	window.unlockedAchieve.forEach(function(item){
 		achieve(item, false)
 	})
+	
+	if (window.buildings[1].amount > 0) {
+		if (document.getElementById("gatherstone").style.display !== "none") return;
+		document.getElementById("gatherstone").style.display = ""
+		document.getElementById("gatherstone").addEventListener("click", function(){
+			if (window.buildings[1].amount !== 1) {
+				window.gameStats.inventory.stone+=window.gameStats.selfincrements.stone
+			}
+			else {
+				window.gameStats.selfincrements.stone = 1
+				window.gameStats.inventory.stone++
+			}
+		})
+	}
 	window.requestAnimationFrame(loop);
 	}
 	catch(e){console.log(e)}

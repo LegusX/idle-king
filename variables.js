@@ -1,7 +1,7 @@
-window.version = "0.0.2"
+window.version = "0.0.3"
 window.gameStats = {
 	running: 1,
-	version: "0.0.2",
+	version: "0.0.3",
 	inventory: {
 		wood: 20,
 		stone: 0,
@@ -150,10 +150,11 @@ window.buildings = [
 					window.gameStats.inventory.stone+=window.gameStats.selfincrements.stone
 				}
 				else {
-					window.gameStats.selfincrements.stone--
+					window.gameStats.selfincrements.stone = 1
 					window.gameStats.inventory.stone++
 				}
 			})
+			return;
 		},
 		changes: [
 			{
