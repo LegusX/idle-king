@@ -81,6 +81,19 @@ function loadGame(datas){
 			}
 		})
 	}
+	if (window.buildings[2].amount > 0) {
+		if (document.getElementById("gatherwheat").style.display !== "none") return;
+		document.getElementById("gatherwheat").style.display = ""
+		document.getElementById("gatherwheat").addEventListener("click", function(){
+			if (window.buildings[2].amount !== 1) {
+				window.gameStats.inventory.wheat+=window.gameStats.selfincrements.wheat
+			}
+			else {
+				window.gameStats.selfincrements.wheat = 1
+				window.gameStats.inventory.wheat++
+			}
+		})
+	}
 	window.requestAnimationFrame(loop);
 	}
 	catch(e){console.log(e)}
@@ -263,7 +276,7 @@ var loop = function(){
 	window.buildings.forEach(function(item){
 		if(item.unlocked === true) {
 			var resourceList = "";
-			if (item.amount >= item.max && item.max >0) return;// document.getElementById(item.name).style.cursor = "not-allowed";
+			if (item.amount >= item.max && item.max >0) return; //document.getElementById(item.name).style.cursor = "not-allowed";
 			else if(item.amount < item.max && document.getElementById(item.name).style.cursor === "not-allowed") document.getElementById(item.name).style.cursor = "pointer";
 			for (var i=0;i<item.resources.length;i++) {
 				resourceList += item.resources[i].name+": "+item.resources[i].value+"\n";
@@ -271,13 +284,13 @@ var loop = function(){
 			document.getElementById(item.name).title = resourceList;
 			return;
 		}
-		var unlocked = false;
+		var unlocked = []
 		item.resources.forEach(function(resource){
-			if(window.gameStats.inventory[resource.name] >= resource.value) unlocked = true
-			else unlocked = false
+			if(window.gameStats.inventory[resource.name] >= resource.value) unlocked.push(true)
+			else unlocked.push(false)
 			return;
 		})
-		if(unlocked) {
+		if(!unlocked.includes(false)) {
 			if (document.getElementById("construction").style.display === "none") document.getElementById("construction").style.display = ""
 			if (document.getElementById(item.name) === null) {
 				window.buildings[window.buildings.indexOf(item)].unlocked = true
