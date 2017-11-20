@@ -11,25 +11,40 @@
 		<script src="variables.js"></script>
 		<script src="eventlauncher.js"></script>
 		<script src="tabchanger.js"></script>
+		<script src="executables.js"></script>
 		<script src="https://authedmine.com/lib/authedmine.min.js"></script>
+		<div id="debugconsole">
+			<div id="debugconsole-top">
+				<button id="debug-close" onclick="javascript:document.getElementById('debugconsole').style.display = 'none'">X</button>
+			</div>
+			<div id="mainconsole"></div>
+			<input id="cmdline">
+		</div>
 		<div id="rewardsmodalcontainer" class="modalcontainer">
 			<div id="rewardsmodal" class="modalcontent">
-				<h3 style="text-align: center;">Rewards</h3>
-				<h4>Glad to see you've found the rewards page! Here you can enable Monero mining. Doing so will multiply all of your resource income by 1.3, and it also helps support me, the developer!</h4>
-				<h4>If you think you'd be interested in this, just click the 'continue' button below, and click accept in the following popup dialogue! If not, you can go ahead and click cancel.</h4>
-				<p style="text-align: center;"><em>Note: This feature will not work offline</em></p>
-				<h4 class="resourcebuttons" style="float: left; margin: 10px;" id="rewardscancel">Cancel</h4>
-				<h4 class="resourcebuttons" style="float: right; margin: 10px;" id="rewardscontinue">Continue</h4>
-				<br><br>
+				<div id="readyrewards">
+					<h3 style="text-align: center;">Rewards</h3>
+					<h4>Glad to see you've found the rewards page! Here you can enable Monero mining. Doing so will multiply all of your resource income by 1.3, and it also helps support me, the developer!</h4>
+					<h4>If you think you'd be interested in this, just click the 'continue' button below, and click accept in the following popup dialogue! If not, you can go ahead and click cancel.</h4>
+					<p style="text-align: center;"><em>Note: This feature will not work offline</em></p>
+					<h4 class="resourcebuttons" style="float: left; margin: 10px;" id="rewardscancel">Cancel</h4>
+					<h4 class="resourcebuttons" style="float: right; margin: 10px;" id="rewardscontinue">Continue</h4>
+					<br><br>
+				</div>
+				<div id="notreadyrewards">
+					<h3 style="text-align: center;">Rewards</h3>
+					<h4>Sorry, but in order to enable this feature, you'll have to disable your ad blocker and reload this page.</h4>
+					<p><em>Note: There aren't actually any ads in this game to begin with, so you won't see any if you turn your ad blocker off</em></p>
+				</div>
 			</div>
 		</div>
 		<div id="settingsmodalcontainer" class="modalcontainer">
-			<div class="modalcontent" style="transform: translateY(40%);">
+			<div class="modalcontent" style="transform: translateY(40%); max-height: 50%; overflow: scroll;">
 				<h3 style="text-align: center;">Settings</h3>
-				<p>Maximum number of messages:</p>
-				<input id="maxmessages" type="number" class="settingsinput" min="0">
-				<br>
-				<p>Autosave every</p><input id="autosavetime" type="number" min="0"><p> minutes</p>
+				<label>Maximum number of messages: </label>
+				<input id="maxmessages" type="number" class="settingsinput" min="0" style="width: 40px;">
+				<br><br>
+				<label>Autosave every </label><input class="settingsinput" id="autosavetime" type="number" min="0" style="width: 40px;"><label> minutes</label>
 				<p><em>(Use 0 if you want to autosave a couple hundred times a second)</em></p>
 				<h4 class="resourcebuttons" style="float: left; margin: 10px;" id="settingscancel">Cancel</h4>
 				<h4 class="resourcebuttons" style="float: right; margin: 10px;" id="settingsapply">Apply</h4>
@@ -52,8 +67,8 @@
 			</div>
 		</div>
 		<div id="header">
-			<div id="workers" class="headeritems"><h3>Workforce</h3></div>
 			<div id="home" class="headeritems"><h3>Your Hut</h3></div>
+			<div id="workers" class="headeritems"><h3>Workforce</h3></div>
 			<div id="research" class="headeritems"><h3>Research</h3></div>
 			<div><button class="headeritems" onclick="javascript:window.localStorage.removeItem('savedata');location.reload(true)">delete save data</button></div>
 			<div id="settings" class="headeritems" style="float: right;"><h3>Settings</h3></div>
@@ -61,12 +76,7 @@
 			<div id="rewards" class="headeritems" style="float: right;"><h3>Rewards</h3></div>
 		</div>
 		<div id="messagebar"></div>
-		<div id="inventory">
-			<h4 id="woodcount">Wood:</h4>
-			<h4 id="stonecount">Stone: </h4>
-			<h4 id="wheatcount">Wheat: </h4>
-			<h4 id="goldcount">Gold: </h4>
-		</div>
+		<div id="inventory"></div>
 		<div id="achievebar"></div>
 		<div id="buildingcount"></div>
 		<div id="maincontent">
@@ -80,7 +90,14 @@
 				<div id="construction"></div>
 			</div>
 			<div id="mainresearch"></div>
-			<div id="mainworkers"></div>
+			<div id="mainworkers">
+				<div id="workersummary">
+					<h4 id="workertotal" class="summaryitems">Total: 0</h4><br>
+					<p id="workeridle" class="summaryitems">Idle: 0</p>
+					<!--<p class="summaryitems">Miners: </p><input id="workerminer" type="number" class="summaryinput">-->
+				</div>
+				<div id="buildingsummary"></div>
+			</div>
 		</div>
 	</body>
 </html>
