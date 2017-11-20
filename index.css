@@ -5,6 +5,7 @@
 	width: 100%;
 	min-height: fit-content;
 	display: inline-block;
+	box-shadow: 1px 1px 1px 1px #4d4d4d;
 }
 
 .header {
@@ -40,7 +41,7 @@
 	float: right;
 	height: fit-content;
 	width: fit-content;
-	border: 2px solid;
+	box-shadow: 2px 2px 2px 2px #4d4d4d;
 	padding: 0 10px;
 	margin-right: 5px;
 }
@@ -68,14 +69,14 @@
 }
 
 #resourcebuttons {
-	border: 2px solid;
+	box-shadow: 2px 2px 2px 2px #4d4d4d;
 	display: inline-block;
 	width: fit-content;
 	padding: 0 10px;
 	vertical-align: top;
 }
 #construction {
-	border: 2px solid;
+	box-shadow: 2px 2px 2px 2px #4d4d4d;
 	display: inline-block;
 	width: fit-content;
 	padding: 0 10px;
@@ -83,17 +84,17 @@
 }
 
 #messagebar {
-	border: 2px solid;
+	box-shadow: 2px 2px 2px 2px #4d4d4d;
 	float: left;
 	/*display: inline-block;*/
-	width: fit-content;
+	width: 20%;
 	padding: 0 10px;
 	max-width: 200px;
 	margin-right: 5px;
 	vertical-align: top;
 }
 #buildingcount {
-	border: 2px solid;
+	box-shadow: 2px 2px 2px 2px #4d4d4d;
 	width: fit-content;
 	padding: 0 10px;
 	float: right;
@@ -124,7 +125,7 @@
     padding: 10px;
     margin: 0 auto;
     transform: translateY(50%);
-    box-shadow: 2px 3px 5px -1px #000000;
+    box-shadow: 2px 3px 5px -1px #4d4d4d;
     background-color: white;
     -webkit-animation-name: animatetop;
     -webkit-animation-duration: 0.7s;
@@ -153,6 +154,7 @@ body {
 #settingsinput {
 	display: inline-block;
 	margin-left: 10px;
+	margin-bottom: 20px;
 }
 
 .achievement {
@@ -163,7 +165,7 @@ body {
 	width: fit-content;
 	height: fit-content;
 	font-size:small;
-    box-shadow: 2px 2px 2px 2px #000000;
+    box-shadow: 2px 2px 2px 2px #4d4d4d;
     border: 1px;
     padding: 5px;
 }
@@ -199,3 +201,49 @@ body {
     -moz-animation-duration: 0.7s;
 }
 
+#workersummary {
+	width: fit-content;
+	padding: 10px;
+	float: left;
+	margin-right: 5px;
+	vertical-align: top;
+    box-shadow: 2px 2px 2px 2px #4d4d4d;
+}
+
+.summaryitems {
+	margin:5px;
+	display: inline-block;
+}
+
+.summaryinput {
+	width:40px;
+}
+
+#debugconsole {
+	overflow:scroll;
+	max-height:30%;
+	float: left;
+	width: 100%;
+	position: fixed;
+	bottom: 0;
+}
+#debugconsole-top {
+	width: 100%;
+	border-top: 1px solid black;
+}
+
+#cmdline {
+	width: 100%;
+	position: fixed;
+	float: left;
+	bottom: 0;
+}
+
+#mainconsole {
+	max-height: 80%;
+	overflow:scroll;
+	background-color: white;
+	border-bottom: 1px black solid;
+	border-top: 1px black solid;
+	bottom: 20px;
+}
