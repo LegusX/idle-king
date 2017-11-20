@@ -127,7 +127,7 @@ try {
 			execute: function(){
 				window.buildings[0].extra = setInterval(function(){
 					if (window.buildings[2].amount > 0) {
-						// clearInterval(window.buildings[0].extra)
+						clearInterval(window.buildings[0].extra)
 						editTab({
 							extra: "workers",
 							value: "Workforce"
