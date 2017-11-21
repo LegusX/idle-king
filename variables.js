@@ -1,8 +1,8 @@
 try {
-	window.version = "0.0.6"
+	window.version = "0.0.7"
 	window.gameStats = {
 		running: 1,
-		version: "0.0.6",
+		version: "0.0.7",
 		inventory: {
 			wood: 0,
 			stone: 0,
@@ -127,7 +127,7 @@ try {
 			],
 			execute: function(){
 				window.buildings[0].extra = setInterval(function(){
-					if (window.buildings[2].amount > 0) {
+					if (window.buildings[2].amount > 0 &&document.getElementById("workers").style.display === "none") {
 						clearInterval(window.buildings[0].extra)
 						editTab({
 							extra: "workers",
