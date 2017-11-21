@@ -1,8 +1,8 @@
 try {
-	window.version = "0.0.5"
+	window.version = "0.0.6"
 	window.gameStats = {
 		running: 1,
-		version: "0.0.5",
+		version: "0.0.6",
 		inventory: {
 			wood: 0,
 			stone: 0,
@@ -25,6 +25,7 @@ try {
 			maxwheat: 0,
 			maxgold: 0,
 			idle: 0,
+			total: 0,
 			max: 0,
 			keys: {}
 		},
@@ -133,7 +134,7 @@ try {
 							value: "Workforce"
 						})
 						setupWorkforce()
-						newMessage({value:"If I were you, I would check out that new Workforce tab up at the top."},-1)
+						newMessage({value:"If I were you, I would check out that new Workforce tab up at the top."})
 					}
 				}, 500)
 			},

@@ -32,6 +32,7 @@ function setupWorkforce(){
 					var idle = total;
 					Object.getOwnPropertyNames(window.gameStats.workincrements).forEach(function(item){
 						idle-=window.gameStats.workforce[item];
+						console.log(window.gameStats.workforce[item])
 					})
 					if (idle-1 >= 0) {
 						document.getElementById("workeridle").textContent = "Idle: "+idle-1
@@ -104,4 +105,8 @@ function iterate(obj, finalArray) {
 
 function createWork(b){
 	
+}
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }

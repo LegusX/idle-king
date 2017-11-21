@@ -156,7 +156,7 @@ function setup() {
 	//because you're waiting for inspiration to hit you and tell you what you have been doing wrong this entire time with the code...
 	//Yeah.
 	//I should probably stop that...
-	["debugconsole", "notreadyrewards", "statsmodalcontent", "statsmodalcontainer", "settingsmodalcontainer", "rewardsmodalcontainer", "workers", "buildingcount", "home", "research", "construction", "inventory", "messagebar", "gatherstone", "gathergold", "gatherwheat", "mainresearch", "mainworkers"].forEach(function(item){
+	["newgamecontainer", "debugconsole", "notreadyrewards", "statsmodalcontent", "statsmodalcontainer", "settingsmodalcontainer", "rewardsmodalcontainer", "workers", "buildingcount", "home", "research", "construction", "inventory", "messagebar", "gatherstone", "gathergold", "gatherwheat", "mainresearch", "mainworkers"].forEach(function(item){
 		document.getElementById(item).style.display = "none";
 	});
 	
@@ -284,6 +284,23 @@ function setup() {
 			window.gameStats.inventory[item] += Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*window.gameStats.running);
 			});
 		window.misc.time++
+		if(getRandomInt(0, 10) === 4) {
+			moreVillagers = getRandomInt(1, 5)
+			if (moreVillagers+window.gameStats.workforce.total > window.gameStats.workforce.max) moreVillagers = window.gameStats.workforce.max-window.gameStats.workforce.total
+			if (moreVillagers === 0) return;
+			if(window.gameStats.name === "undefined") document.getElementById("newgamecontainer").style.display = ""
+			document.getElementById("confirmnewgame").addEventListener("click", function(){
+				var input = document.getElementById("namepicker")
+				if (input.value === "") return alert("You need to choose a name!")
+				else {
+					window.gameStats.name = input.value
+					document.getElementById("newgamecontainer").style.display = "none"
+				}
+			})
+			newMessage({value: moreVillagers+" villager(s) have moved into your village!"}, -1)
+			window.gameStats.workforce.total+=moreVillagers
+			window.gameStats.workforce.idle+=moreVillagers
+		}
 		}
 		catch(e){console.log(e)}
 	}, 1000);
@@ -366,6 +383,7 @@ var loop = function(){
 	Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function(item){
 		document.getElementById(item+"count").textContent = item+": " + window.gameStats.inventory[item]
 	})
+	document.getElementById("workertotal").textContent = "Total: "+window.gameStats.workforce.total
 	}catch(e){console.log(e)}
 	window.requestAnimationFrame(loop)
 }
@@ -384,10 +402,6 @@ window.addEventListener("keydown", function(e) {
 		Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function(item){window.gameStats.inventory[item]+=1000000})
 	}
 })
-
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
-}
 
 var buildingCreate = function(e){
 	try {
