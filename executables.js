@@ -5,6 +5,9 @@ function setupWorkforce(){
 		var worksummary = document.getElementById("workersummary")
 		var buildsummary = document.getElementById("buildingsummary")
 		
+		document.getElementById("workeridle").textContent = "Idle: "+window.gameStats.workforce.idle
+		document.getElementById("workertotal").textContent = "Total: "+window.gameStats.workforce.max
+
 		window.RGV.workforce = true
 		window.buildings.forEach(function(item){
 			if (typeof item.workforce === "undefined") return;
@@ -21,38 +24,24 @@ function setupWorkforce(){
 				newWorkerInput.type = "number"
 				newWorkerInput.id = "worker"+item.workforce.name
 				newWorkerInput.classList.add("summaryinput")
-				// newWorkerInput.extra = "stone"
 				newWorkerInput.min = 0
 				newWorkerInput.max = window.gameStats.workforce["max"+item.workforce.maxwhat]
+				newWorkerInput.value = window.gameStats.workforce[item.workforce.maxwhat]
 				
 				newWorkerInput.addEventListener("input", function(e){
-					// console.log(e.target.extra)
-					var target = e.target
-					var total = Number(document.getElementById('workertotal').textContent.replace("Total: ", ""));
-					var idle = total;
-					Object.getOwnPropertyNames(window.gameStats.workincrements).forEach(function(item){
-						idle-=window.gameStats.workforce[item];
-						console.log(window.gameStats.workforce[item])
-					})
-					if (idle-1 >= 0) {
-						document.getElementById("workeridle").textContent = "Idle: "+idle-1
-						window.gameStats.workforce[target.id.replace("worker", "")] = e.target.value
-					}
-					else {
-						document.getElementById(e.target.id).value = window.gameStats.workforce[target.id.replace("worker", "")]
-						console.log(window.gameStats.workforce[target.id.replace("worker", "")])
-						console.log(target.id.replace("worker", ""))
-					}
+					try{
+						var name = e.target.id.substr(6)
+						var item = findWork(name)
+						console.log(item)
+					}catch(e){console.error(e+"NEWORKER")}
 				})
 				if(!item.unlocked) newWorkerInput.style.display = "none"
 				worksummary.appendChild(newWorkerInput)
-				
-				window.gameStats.workforce.keys
 			}
-			for(var i=0;i<Object.getOwnPropertyNames(item.workforce.workchanges).length;i++) {
+/*			for(var i=0;i<Object.getOwnPropertyNames(item.workforce.workchanges).length;i++) {
 				
 			}
-		})
+*/		})
 	}
 	catch(e){console.log}
 }
@@ -61,8 +50,8 @@ function launchCommand(message){
 	try {
 		if (typeof message === "undefined") {
 			var command = document.getElementById("cmdline").value
+			if (command === "") return;
 			window.commandList.push(command)
-			alert(window.commandList)
 			try {
 				response = eval(command)
 				newMessage = document.createElement("label")
@@ -84,7 +73,7 @@ function launchCommand(message){
 			document.getElementById("mainconsole").appendChild(newMessage)
 			document.getElementById("mainconsole").appendChild(document.createElement("hr"))
 		}
-		document.getElementById("debugconsole").scrollTop = 4000
+		document.getElementById("debugconsole").scrollTop = document.getElementById("debugconsole").scrollHeight+1
 	}
 	catch(e){console.log(e)}
 }
@@ -104,9 +93,15 @@ function iterate(obj, finalArray) {
 }
 
 function createWork(b){
-	
+	try {
+		if(!window.gameStats.workforce.workers.includes(b.workforce)) window.gameStats.workforce.workers.push(b.workforce)
+		// else
+		window.gameStats.workforce["max"+b.workforce.maxwhat]+=b.workforce.maxchange
+		if(document.getElementById("worker"+b.workforce.name) !== null) document.getElementById("worker"+b.workforce.name).max = window.gameStats.workforce["max"+b.workforce.maxwhat]
+	}catch(e){console.error(e)}
 }
 
+//Totally stolen from the MDN docs :D
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }

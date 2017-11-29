@@ -11,7 +11,8 @@ window.onload = function() {
 		if (e.key === "Enter") {
 			launchCommand();
 		}
-		else if(e.key ==="ArrowUp") {
+		else if(e.key === "ArrowUp") {
+			console.log("hiya")
 			if (window.commandList.includes(document.getElementById("cmdline").value)) {
 				document.getElementById("cmdline").value = window.commandList[(window.commandList.indexOf(document.getElementById("cmdline").value)-1 === -1)?0:window.commandList.indexOf(document.getElementById("cmdline").value)-1]
 			}
@@ -75,6 +76,7 @@ function loadGame(datas){
 	setup();
 	setupWorkforce();
 
+	if (window.gameStats.name !== undefined) document.title = "Civ Clicker - "+window.gameStats.name
 	if (document.getElementById("inventory").style.display === "none") document.getElementById("inventory").style.display = "";
 	if (document.getElementById("construction").style.display === "none") document.getElementById("construction").style.display = "";
 	
@@ -271,8 +273,6 @@ function setup() {
 	
 	window.incrementer = setInterval(function(){
 		try {
-		Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function(item){
-			if (window.gameStats.workforce[item] === 0) return;
 			
 			var running;
 			if (typeof window.miner !== "undefined" && navigator.onLine && window.miner.isRunning()) window.gameStats.running = 1.3;
@@ -281,26 +281,31 @@ function setup() {
 			if (typeof window.miner !== "undefined" && navigator.onLine && Date.now()-window.miner.startTime > 3600 && window.miner.isRunning()) {
 				window.gameStats.running = Math.floor((Date.now()-window.miner.startTime)/3600)*0.05+1.3;
 			}
-			window.gameStats.inventory[item] += Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*window.gameStats.running);
+			if(window.gameStats.workforce.workers.length > 0) window.gameStats.workforce.workers.forEach(function(item){
+				Object.getOwnPropertyNames(item.workchanges).forEach(function(sitem){
+					window.gameStats.inventory[sitem]+=this.workchanges[sitem]*this.amount*window.gameStats.running
+				},item)
 			});
-		window.misc.time++
-		if(getRandomInt(0, 10) === 4) {
-			moreVillagers = getRandomInt(1, 5)
-			if (moreVillagers+window.gameStats.workforce.total > window.gameStats.workforce.max) moreVillagers = window.gameStats.workforce.max-window.gameStats.workforce.total
-			if (moreVillagers === 0) return;
-			if(window.gameStats.name === "undefined") document.getElementById("newgamecontainer").style.display = ""
-			document.getElementById("confirmnewgame").addEventListener("click", function(){
-				var input = document.getElementById("namepicker")
-				if (input.value === "") return alert("You need to choose a name!")
-				else {
-					window.gameStats.name = input.value
-					document.getElementById("newgamecontainer").style.display = "none"
-				}
-			})
-			newMessage({value: moreVillagers+" villager(s) have moved into your village!"}, -1)
-			window.gameStats.workforce.total+=moreVillagers
-			window.gameStats.workforce.idle+=moreVillagers
-		}
+			// window.gameStats.inventory[item] += Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*window.gameStats.running);
+			window.misc.time++
+			if(getRandomInt(0, 10) === 4) {
+				moreVillagers = getRandomInt(1, 5)
+				if (moreVillagers+window.gameStats.workforce.total > window.gameStats.workforce.max) moreVillagers = window.gameStats.workforce.max-window.gameStats.workforce.total
+				if (moreVillagers === 0) return;
+				if(typeof window.gameStats.name === "undefined") document.getElementById("newgamecontainer").style.display = ""
+				document.getElementById("confirmnewgame").addEventListener("click", function(){
+					var input = document.getElementById("namepicker")
+					if (input.value === "") return alert("You need to choose a name!")
+					else {
+						window.gameStats.name = input.value
+						document.getElementById("newgamecontainer").style.display = "none"
+						document.title = "Civ Clicker - "+input.value
+					}
+				})
+				newMessage({value: moreVillagers+" villager(s) have moved into your village!"}, -1)
+				window.gameStats.workforce.total+=moreVillagers
+				window.gameStats.workforce.idle+=moreVillagers
+			}
 		}
 		catch(e){console.log(e)}
 	}, 1000);
@@ -333,10 +338,13 @@ var loop = function(){
 	}
 	else if (document.hasFocus && !window.focused) {
 		window.focused = true;
-		Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function(item){
-			if (window.gameStats.workforce[item] === 0) return;
-			window.gameStats.inventory[item] += Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*(Date.now()-window.lastFocus)*window.gameStats.running);
-			window.misc.time+=(Date.now()-window.lastFocus);
+		window.gameStats.workforce.workers.forEach(function(item){
+			// if (window.gameStats.workforce[item] === 0) return;
+			// window.gameStats.inventory[item] += Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*(Date.now()-window.lastFocus)*window.gameStats.running);
+			// window.misc.time+=(Date.now()-window.lastFocus);
+			Object.getOwnPropertyNames(item.workchanges).forEach(function(sitem){
+				window.gameStats.inventory[sitem]+=item.workchanges[sitem]*amount*(Date.now()-window.lastFocus)*window.gameStats.running
+			})
 		});
 	}
 	Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function(item){
@@ -347,7 +355,8 @@ var loop = function(){
 		// 	document.getElementById("inventory").appendChild(newResource);
 		// }
 		if (document.getElementById(item+"count").style.display === "none" && window.gameStats.inventory[item] > 0) document.getElementById(item+"count").style.display = ""
-		document.getElementById(item+"count").title = Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*window.gameStats.running)+" "+item+"/second";
+		// document.getElementById(item+"count").title = Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*window.gameStats.running)+" "+item+"/second";
+		// document.getElementById(item+"count").title = (window.gameStats.workforce.calc[item] === 0)?"0 "+item+"/second":window.gameStats.workforce.calc[item]
 	});
 	window.buildings.forEach(function(item){
 		if(item.unlocked === true) {
@@ -448,11 +457,21 @@ var buildingCreate = function(e){
 					}
 					if(typeof window.buildings[i].workforce !== "undefined") {
 						// window.gameStats.workforce["max"+window.buildings[i].workforce.maxwhat]+=window.buildings[i].workforce.maxchange
-						createWork(window.buildings[i])
+						// createWork(window.buildings[i])
 					}
 				}
 				i = window.buildings.length
 			}
 		}
 	}catch(e){console.log(e)}
+}
+
+function findWork(name){
+	for (var i=0;i<window.gameStats.workforce.workers.length;i++) {
+		if (window.gameStats.workforce.workers[i].name === name) {
+			i=window.gameStats.workforce.workers.length
+			var choosen = window.gameStats.workforce.workers[i]
+		}
+	}
+	return choosen;
 }

@@ -16,18 +16,27 @@ try {
 			gold: 1
 		},
 		workforce: {
-			wood: 0,
-			stone: 0,
-			wheat: 0,
-			gold: 0,
-			maxwood: 0,
-			maxstone: 0,
-			maxwheat: 0,
-			maxgold: 0,
-			idle: 0,
-			total: 0,
+			workers: [],
 			max: 0,
-			keys: {}
+			idle: 0,
+			calc: {
+				wood: 0,
+				stone: 0,
+				wheat: 0,
+				gold: 0
+			}
+			// wood: 0,
+			// stone: 0,
+			// wheat: 0,
+			// gold: 0,
+			// maxwood: 0,
+			// maxstone: 0,
+			// maxwheat: 0,
+			// maxgold: 0,
+			// idle: 0,
+			// total: 0,
+			// max: 0,
+			// keys: {}
 		},
 		workincrements: {
 			wood: 1,
@@ -204,6 +213,7 @@ try {
 			],
 			workforce: {
 				maxchange: 5,
+				amount: 0,
 				maxwhat: "stone",
 				name: "Miners",
 				workchanges: {
