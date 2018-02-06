@@ -1,30 +1,31 @@
 window.onload = function() {
 	try{
-	window.commandList = [""]
-	window.addEventListener("keydown", function(e){
-		if (e.key === "d"){
-			if(document.getElementById("debugconsole").style.display === "none") document.getElementById("debugconsole").style.display = "";
-			else if(e.target.id !== "cmdline") document.getElementById("debugconsole").style.display = "none";
-		}
-	});
-	document.getElementById("cmdline").addEventListener("keydown", function(e){
-		if (e.key === "Enter") {
-			launchCommand();
-		}
-		else if(e.key === "ArrowUp") {
-			console.log("hiya")
-			if (window.commandList.includes(document.getElementById("cmdline").value)) {
-				document.getElementById("cmdline").value = window.commandList[(window.commandList.indexOf(document.getElementById("cmdline").value)-1 === -1)?0:window.commandList.indexOf(document.getElementById("cmdline").value)-1]
+		setupBuildings()
+		window.commandList = [""]
+		window.addEventListener("keydown", function(e){
+			if (e.key === "d"){
+				if(document.getElementById("debugconsole").style.display === "none") document.getElementById("debugconsole").style.display = "";
+				else if(e.target.id !== "cmdline") document.getElementById("debugconsole").style.display = "none";
 			}
-			else {
-				document.getElementById("cmdline").value = window.commandList[window.commandList.length-1]
+		});
+		document.getElementById("cmdline").addEventListener("keydown", function(e){
+			if (e.key === "Enter") {
+				launchCommand();
 			}
-		}
-	});
-	var saveData = window.localStorage.getItem("savedata");
-	if(!saveData) newGame();
-	// setup()
-	else loadGame(saveData);
+			else if(e.key === "ArrowUp") {
+				console.log("hiya")
+				if (window.commandList.includes(document.getElementById("cmdline").value)) {
+					document.getElementById("cmdline").value = window.commandList[(window.commandList.indexOf(document.getElementById("cmdline").value)-1 === -1)?0:window.commandList.indexOf(document.getElementById("cmdline").value)-1]
+				}
+				else {
+					document.getElementById("cmdline").value = window.commandList[window.commandList.length-1]
+				}
+			}
+		});
+		var saveData = window.localStorage.getItem("savedata");
+		if(!saveData) newGame();
+		// setup()
+		else loadGame(saveData);
 	}
 	catch(e){console.log(e)}
 };
@@ -143,7 +144,7 @@ function loadGame(datas){
 	});
 	window.requestAnimationFrame(loop);
 	}
-	catch(e){console.log(e)}
+	catch(e){console.log(e+"TEST")}
 }
 
 
@@ -281,18 +282,27 @@ function setup() {
 			if (typeof window.miner !== "undefined" && navigator.onLine && Date.now()-window.miner.startTime > 3600 && window.miner.isRunning()) {
 				window.gameStats.running = Math.floor((Date.now()-window.miner.startTime)/3600)*0.05+1.3;
 			}
-			if(window.gameStats.workforce.workers.length > 0) window.gameStats.workforce.workers.forEach(function(item){
+			window.buildings.forEach(function(item){
+				item = item.workforce
+				if (typeof item === "undefined") return;
+				var canup = []
 				Object.getOwnPropertyNames(item.workchanges).forEach(function(sitem){
-					window.gameStats.inventory[sitem]+=this.workchanges[sitem]*this.amount*window.gameStats.running
+					if (window.gameStats.inventory[sitem]+this.workchanges[sitem]*this.amount*window.gameStats.running > 0) canup.push(true)
+					else canup.push(false)
 				},item)
+				if (!canup.includes(false)) {
+					Object.getOwnPropertyNames(item.workchanges).forEach(function(sitem){
+						window.gameStats.inventory[sitem]+=this.workchanges[sitem]*this.amount*window.gameStats.running
+					},item)
+				}
 			});
 			// window.gameStats.inventory[item] += Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*window.gameStats.running);
 			window.misc.time++
-			if(getRandomInt(0, 10) === 4) {
-				moreVillagers = getRandomInt(1, 5)
+			if(getRandomInt(0, 10) === 4 && document.getElementById("workers").style.display !== "none" && window.gameStats.workforce.total < window.gameStats.workforce.max) {
+				moreVillagers = getRandomInt(1, 5 >= window.gameStats.workforce.max-window.gameStats.workforce.total?window.gameStats.workforce.max-window.gameStats.workforce.total+1: 6)
 				if (moreVillagers+window.gameStats.workforce.total > window.gameStats.workforce.max) moreVillagers = window.gameStats.workforce.max-window.gameStats.workforce.total
 				if (moreVillagers === 0) return;
-				if(typeof window.gameStats.name === "undefined") document.getElementById("newgamecontainer").style.display = ""
+				if(typeof window.gameStats.name === "undefined" && window.gameStats.workforce.total >= 20) document.getElementById("newgamecontainer").style.display = ""
 				document.getElementById("confirmnewgame").addEventListener("click", function(){
 					var input = document.getElementById("namepicker")
 					if (input.value === "") return alert("You need to choose a name!")
@@ -307,7 +317,7 @@ function setup() {
 				window.gameStats.workforce.idle+=moreVillagers
 			}
 		}
-		catch(e){console.log(e)}
+		catch(e){console.log(e+"NOPE")}
 	}, 1000);
 	
 	window.autosaver = setInterval(function(){
@@ -326,7 +336,7 @@ function setup() {
 	}, 1000*60*window.settings.autosaveTime);
 	
 	}
-	catch(e){console.log(e)}
+	catch(e){console.warn(e+"UHOH")}
 	return;
 }
 
@@ -338,7 +348,9 @@ var loop = function(){
 	}
 	else if (document.hasFocus && !window.focused) {
 		window.focused = true;
-		window.gameStats.workforce.workers.forEach(function(item){
+		window.buildings.forEach(function(item){
+			if (typeof item.workforce === "undefined") return;
+			item = item.workforce
 			// if (window.gameStats.workforce[item] === 0) return;
 			// window.gameStats.inventory[item] += Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*(Date.now()-window.lastFocus)*window.gameStats.running);
 			// window.misc.time+=(Date.now()-window.lastFocus);
@@ -393,7 +405,19 @@ var loop = function(){
 		document.getElementById(item+"count").textContent = item+": " + window.gameStats.inventory[item]
 	})
 	document.getElementById("workertotal").textContent = "Total: "+window.gameStats.workforce.total
-	}catch(e){console.log(e)}
+	document.getElementById("workeridle").textContent = "Idle: "+window.gameStats.workforce.idle
+	
+	var kids = document.getElementById("workersummary").children
+	for (var y = 0; y<kids.length;y++) {
+		var kid = kids[y]
+		if (!kid.id.includes("total") && !kid.id.includes("idle") && !kid.id.includes("-")&& !kid.id.includes("+") && kid.id.replace("worker","")!== "" && !kid.id.includes("name")) {
+			// console.log(findBuild(findWork(kid.id.replace("worker","")).owner))
+			var calc = findWork(kid.id.replace("worker","")).maxchange*findBuild(findWork(kid.id.replace("worker","")).owner).amount
+			document.getElementById(kid.id).max = (calc > findWork(kid.id.replace("worker","")).amount+window.gameStats.workforce.idle)?window.gameStats.workforce.idle+findBuild(findWork(kid.id.replace("worker","")).owner).amount:calc
+			// console.log(calc > findWork(kid.id.replace("worker","")).amount+window.gameStats.workforce.idle)
+		}
+	}
+	}catch(e){console.log(e+"TET")}
 	window.requestAnimationFrame(loop)
 }
 
@@ -418,7 +442,7 @@ var buildingCreate = function(e){
 		if (e.target.style.cursor === "not-allowed") return;
 		for(var i=0; i<window.buildings.length; i++) {
 			if(window.buildings[i].name === self.textContent) {
-				canbuy = []
+				var canbuy = []
 				for(var j=0; j<window.buildings[i].resources.length; j++) {
 					if (window.gameStats.inventory[window.buildings[i].resources[j].name] >= window.buildings[i].resources[j].value) canbuy.push(true)
 					else canbuy.push(false)
@@ -456,22 +480,31 @@ var buildingCreate = function(e){
 						window.buildings[i].execute()
 					}
 					if(typeof window.buildings[i].workforce !== "undefined") {
-						// window.gameStats.workforce["max"+window.buildings[i].workforce.maxwhat]+=window.buildings[i].workforce.maxchange
-						// createWork(window.buildings[i])
+						createWork(window.buildings[i])
 					}
 				}
 				i = window.buildings.length
 			}
 		}
-	}catch(e){console.log(e)}
+	}catch(e){console.log(e+"building")}
 }
 
 function findWork(name){
-	for (var i=0;i<window.gameStats.workforce.workers.length;i++) {
-		if (window.gameStats.workforce.workers[i].name === name) {
-			i=window.gameStats.workforce.workers.length
-			var choosen = window.gameStats.workforce.workers[i]
+	for (var i=0;i<window.buildings.length;i++) {
+		if (typeof window.buildings[i].workforce !== "undefined" &&window.buildings[i].workforce.name === name) {
+			return window.buildings[i].workforce
 		}
 	}
-	return choosen;
+}
+
+function findBuild(name) {
+	for (var i=0;i<window.buildings.length;i++) {
+		if (window.buildings[i].name === name) {
+			return window.buildings[i]
+		}
+	}
+}
+//Totally stolen from the MDN docs :D
+window.getRandomInt = function (min, max) {
+  return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }

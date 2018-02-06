@@ -1,3 +1,8 @@
+# Update 0.0.8
+* Finished workforce
+* Fixed bug with village naming popup coming too early
+* Optimized a few things
+
 # Update 0.0.7
 * Completely rewrote workforce, not finished yet though.
 * Probably fixed a few bugs I don't remember

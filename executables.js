@@ -1,79 +1,111 @@
 //This is mainly for random functions that only ever get executed once or twice throughout the game
 function setupWorkforce(){
 	try{
-		var work = document.getElementById("mainworkers")
-		var worksummary = document.getElementById("workersummary")
-		var buildsummary = document.getElementById("buildingsummary")
+		var work = document.getElementById("mainworkers");
+		var worksummary = document.getElementById("workersummary");
+		var buildsummary = document.getElementById("buildingsummary");
 		
-		document.getElementById("workeridle").textContent = "Idle: "+window.gameStats.workforce.idle
-		document.getElementById("workertotal").textContent = "Total: "+window.gameStats.workforce.max
+		document.getElementById("workeridle").textContent = "Idle: "+window.gameStats.workforce.idle;
+		document.getElementById("workertotal").textContent = "Total: "+window.gameStats.workforce.max;
 
-		window.RGV.workforce = true
+		window.RGV.workforce = true;
 		window.buildings.forEach(function(item){
 			if (typeof item.workforce === "undefined") return;
 			if (document.getElementById("workername"+item.workforce.name) === null && document.getElementById("worker"+item.workforce.name) === null) {
-				worksummary.appendChild(document.createElement("br"))
-				var newWorkerText = document.createElement("p")
-				newWorkerText.textContent = item.workforce.name+": "
-				newWorkerText.classList.add("summaryitems")
-				newWorkerText.id = "workername"+item.workforce.name
-				if(!item.unlocked) newWorkerText.style.display = "none"
-				worksummary.appendChild(newWorkerText)
+				worksummary.appendChild(document.createElement("br"));
 				
-				var newWorkerInput = document.createElement("input")
-				newWorkerInput.type = "number"
-				newWorkerInput.id = "worker"+item.workforce.name
-				newWorkerInput.classList.add("summaryinput")
-				newWorkerInput.min = 0
-				newWorkerInput.max = window.gameStats.workforce["max"+item.workforce.maxwhat]
-				newWorkerInput.value = window.gameStats.workforce[item.workforce.maxwhat]
+				var newWorkerText = document.createElement("p");
+				newWorkerText.textContent = item.workforce.name+": ";
+				newWorkerText.classList.add("summaryitems");
+				newWorkerText.id = "workername"+item.workforce.name;
+				if(!item.unlocked) newWorkerText.style.display = "none";
+				worksummary.appendChild(newWorkerText);
 				
-				newWorkerInput.addEventListener("input", function(e){
-					try{
-						var name = e.target.id.substr(6)
-						var item = findWork(name)
-						console.log(item)
-					}catch(e){console.error(e+"NEWORKER")}
-				})
-				if(!item.unlocked) newWorkerInput.style.display = "none"
-				worksummary.appendChild(newWorkerInput)
+				item.workforce.owner = item.name;
+				
+				var newWorkerInput = document.createElement("button");
+				newWorkerInput.id = "worker"+item.workforce.name+"-";
+				newWorkerInput.textContent = "-1";
+				newWorkerInput.addEventListener("click", function(e){
+					try {
+						var amount = Number(e.target.textContent.substring(1,e.target.textContent.length))*-1
+						var name = e.target.id.replace("worker", "").split("").splice(0,e.target.id.replace("worker", "").length-1).join("");
+						var work = findWork(name);
+						if (work.amount+amount < 0) return;
+						if (window.gameStats.workforce.idle - amount <0) return;
+						work.amount+=amount;
+						window.buildings[window.buildingNames.indexOf(work.building)].workforce = work;
+						window.gameStats.workforce.idle+=amount*-1;
+						var p = document.getElementById("worker"+work.name);
+						p.textContent = work.amount
+					}catch(e){console.log(e)}
+				});
+				if(!item.unlocked) newWorkerInput.style.display = "none";
+				worksummary.appendChild(newWorkerInput);
+				
+				var newWorkerNumber = document.createElement("p");
+				newWorkerNumber.id = "worker"+item.workforce.name;
+				newWorkerNumber.textContent = item.workforce.amount;
+				newWorkerNumber.classList.add("summaryinput");
+				if(!item.unlocked) newWorkerInput.style.display = "none";
+				worksummary.appendChild(newWorkerNumber);
+				
+				var newWorkerInput2 = document.createElement("button");
+				newWorkerInput2.id = "worker"+item.workforce.name+"+";
+				newWorkerInput2.textContent = "+1";
+				newWorkerInput2.addEventListener("click", function(e){
+					try {
+						var amount = Number(e.target.textContent.substring(1,e.target.textContent.length))
+						var name = e.target.id.replace("worker", "").split("").splice(0,e.target.id.replace("worker", "").length-1).join("");
+						var work = findWork(name);
+						if (work.amount+amount < 0) return;
+						if (window.gameStats.workforce.idle - amount <0) return;
+						work.amount+=amount;
+						window.buildings[window.buildingNames.indexOf(work.building)].workforce = work;
+						window.gameStats.workforce.idle+=amount*-1;
+						var p = document.getElementById("worker"+work.name);
+						p.textContent = work.amount
+					}catch(e){console.log(e)}
+				});
+				if(!item.unlocked) newWorkerInput2.style.display = "none";
+				worksummary.appendChild(newWorkerInput2);
+				
+				
 			}
-/*			for(var i=0;i<Object.getOwnPropertyNames(item.workforce.workchanges).length;i++) {
-				
-			}
-*/		})
+
+		});
 	}
-	catch(e){console.log}
+	catch(e){console.log(e+"SIRLY")}
 }
 
 function launchCommand(message){
 	try {
 		if (typeof message === "undefined") {
-			var command = document.getElementById("cmdline").value
+			var command = document.getElementById("cmdline").value;
 			if (command === "") return;
-			window.commandList.push(command)
+			window.commandList.push(command);
 			try {
-				response = eval(command)
-				newMessage = document.createElement("label")
-				newMessage.innerHTML = "<span style='color: #0029cc;'>"+response+"</span>"
-				document.getElementById("mainconsole").appendChild(newMessage)
-				document.getElementById("mainconsole").appendChild(document.createElement("hr"))
+				response = eval(command);
+				newMessage = document.createElement("label");
+				newMessage.innerHTML = "<span style='color: #0029cc;'>"+response+"</span>";
+				document.getElementById("mainconsole").appendChild(newMessage);
+				document.getElementById("mainconsole").appendChild(document.createElement("hr"));
 			}
 			catch(e){
-				newMessage = document.createElement("label")
-				newMessage.innerHTML = "<span style='color: red;'>"+e+"</span>"
-				document.getElementById("mainconsole").appendChild(newMessage)
-				document.getElementById("mainconsole").appendChild(document.createElement("hr"))
+				newMessage = document.createElement("label");
+				newMessage.innerHTML = "<span style='color: red;'>"+e+"</span>";
+				document.getElementById("mainconsole").appendChild(newMessage);
+				document.getElementById("mainconsole").appendChild(document.createElement("hr"));
 			}
-			document.getElementById("cmdline").value = ""
+			document.getElementById("cmdline").value = "";
 		}
 		else {
-			newMessage = document.createElement("label")
-			newMessage.innerHTML = "<span style='color: "+(message.includes("error")||message.includes("Error"))?red:black+";'>"+message+"</span>"
-			document.getElementById("mainconsole").appendChild(newMessage)
-			document.getElementById("mainconsole").appendChild(document.createElement("hr"))
+			newMessage = document.createElement("label");
+			newMessage.innerHTML = "<span style='color: "+(message.includes("error")||message.includes("Error"))?red:black+";'>"+message+"</span>";
+			document.getElementById("mainconsole").appendChild(newMessage);
+			document.getElementById("mainconsole").appendChild(document.createElement("hr"));
 		}
-		document.getElementById("debugconsole").scrollTop = document.getElementById("debugconsole").scrollHeight+1
+		document.getElementById("debugconsole").scrollTop = document.getElementById("debugconsole").scrollHeight+1;
 	}
 	catch(e){console.log(e)}
 }
@@ -85,23 +117,96 @@ function iterate(obj, finalArray) {
             if (typeof obj[property] == "object" /*&&typeof obj.length == "undefined"*/) {
                 iterate(obj[property], finalArray);
             } else {
-                if(!finalArray.includes(property)) finalArray.push(property)
+                if(!finalArray.includes(property)) finalArray.push(property);
             }
         }
     }
-	return finalArray
+	return finalArray;
 }
 
-function createWork(b){
+function createWork(item){
 	try {
-		if(!window.gameStats.workforce.workers.includes(b.workforce)) window.gameStats.workforce.workers.push(b.workforce)
-		// else
-		window.gameStats.workforce["max"+b.workforce.maxwhat]+=b.workforce.maxchange
-		if(document.getElementById("worker"+b.workforce.name) !== null) document.getElementById("worker"+b.workforce.name).max = window.gameStats.workforce["max"+b.workforce.maxwhat]
-	}catch(e){console.error(e)}
+		var work = document.getElementById("mainworkers");
+		var worksummary = document.getElementById("workersummary");
+		var buildsummary = document.getElementById("buildingsummary");
+		
+		document.getElementById("workeridle").textContent = "Idle: "+window.gameStats.workforce.idle;
+		document.getElementById("workertotal").textContent = "Total: "+window.gameStats.workforce.max;
+
+		window.RGV.workforce = true;
+		window.buildings.forEach(function(item){
+			if (typeof item.workforce === "undefined") return;
+			if (document.getElementById("workername"+item.workforce.name) === null && document.getElementById("worker"+item.workforce.name) === null) {
+				worksummary.appendChild(document.createElement("br"));
+				
+				var newWorkerText = document.createElement("p");
+				newWorkerText.textContent = item.workforce.name+": ";
+				newWorkerText.classList.add("summaryitems");
+				newWorkerText.id = "workername"+item.workforce.name;
+				if(!item.unlocked) newWorkerText.style.display = "none";
+				worksummary.appendChild(newWorkerText);
+				
+				item.workforce.owner = item.name;
+				
+				var newWorkerInput = document.createElement("button");
+				newWorkerInput.id = "worker"+item.workforce.name+"-";
+				newWorkerInput.textContent = "-1";
+				newWorkerInput.addEventListener("click", function(e){
+					try {
+						var amount = Number(e.target.textContent.substring(1,e.target.textContent.length))*-1
+						var name = e.target.id.replace("worker", "").split("").splice(0,e.target.id.replace("worker", "").length-1).join("");
+						var work = findWork(name);
+						if (work.amount+amount < 0) return;
+						if (window.gameStats.workforce.idle - amount <0) return;
+						work.amount+=amount;
+						window.buildings[window.buildingNames.indexOf(work.building)].workforce = work;
+						window.gameStats.workforce.idle+=amount*-1;
+						var p = document.getElementById("worker"+work.name);
+						p.textContent = work.amount
+					}catch(e){console.log(e)}
+				});
+				if(!item.unlocked) newWorkerInput.style.display = "none";
+				worksummary.appendChild(newWorkerInput);
+				
+				var newWorkerNumber = document.createElement("p");
+				newWorkerNumber.id = "worker"+item.workforce.name;
+				newWorkerNumber.textContent = item.workforce.amount;
+				newWorkerNumber.classList.add("summaryinput");
+				if(!item.unlocked) newWorkerInput.style.display = "none";
+				worksummary.appendChild(newWorkerNumber);
+				
+				var newWorkerInput2 = document.createElement("button");
+				newWorkerInput2.id = "worker"+item.workforce.name+"+";
+				newWorkerInput2.textContent = "+1";
+				newWorkerInput2.addEventListener("click", function(e){
+					try {
+						var amount = Number(e.target.textContent.substring(1,e.target.textContent.length))
+						var name = e.target.id.replace("worker", "").split("").splice(0,e.target.id.replace("worker", "").length-1).join("");
+						var work = findWork(name);
+						if (work.amount+amount < 0) return;
+						if (window.gameStats.workforce.idle - amount <0) return;
+						work.amount+=amount;
+						window.buildings[window.buildingNames.indexOf(work.building)].workforce = work;
+						window.gameStats.workforce.idle+=amount*-1;
+						var p = document.getElementById("worker"+work.name);
+						p.textContent = work.amount
+					}catch(e){console.log(e)}
+				});
+				if(!item.unlocked) newWorkerInput2.style.display = "none";
+				worksummary.appendChild(newWorkerInput2);
+				
+				
+			}
+
+		});
+	}
+	catch(e){console.error(e)}
 }
 
-//Totally stolen from the MDN docs :D
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+function setupBuildings(){
+	window.buildingNames = []
+	for (var i=0;i<window.buildings.length;i++){
+		window.buildingNames.push(window.buildings[i].name)
+	}
+	return;
 }

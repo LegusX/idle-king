@@ -16,6 +16,7 @@ try {
 			gold: 1
 		},
 		workforce: {
+			total: 0,
 			workers: [],
 			max: 0,
 			idle: 0,
@@ -25,18 +26,6 @@ try {
 				wheat: 0,
 				gold: 0
 			}
-			// wood: 0,
-			// stone: 0,
-			// wheat: 0,
-			// gold: 0,
-			// maxwood: 0,
-			// maxstone: 0,
-			// maxwheat: 0,
-			// maxgold: 0,
-			// idle: 0,
-			// total: 0,
-			// max: 0,
-			// keys: {}
 		},
 		workincrements: {
 			wood: 1,
@@ -145,7 +134,7 @@ try {
 						setupWorkforce()
 						newMessage({value:"If I were you, I would check out that new Workforce tab up at the top."})
 					}
-				}, 500)
+				}, 10)
 			},
 			changes: [
 				{
@@ -214,12 +203,13 @@ try {
 			workforce: {
 				maxchange: 5,
 				amount: 0,
-				maxwhat: "stone",
+				maxwhat: "Miners",
 				name: "Miners",
 				workchanges: {
 					stone: 1,
 					wheat: -0.5
-				}
+				},
+				building: "Mine"
 			},
 			execute: function(){
 				try {
@@ -277,6 +267,17 @@ try {
 					launched: false
 				}
 			],
+			workforce: {
+				maxchange: 5,
+				amount: 0,
+				maxwhat: "Farmers",
+				name: "Farmers",
+				workchanges: {
+					stone: 1,
+					wheat: -0.5
+				},
+				building: "Farm"
+			},
 			execute: function(){
 				if (document.getElementById("gatherwheat").style.display === "none") {
 					document.getElementById("gatherwheat").style.display = ""

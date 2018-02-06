@@ -216,7 +216,12 @@ body {
 }
 
 .summaryinput {
-	width:40px;
+	display:inline;
+	margin:0 4px;
+}
+
+#workersummary button {
+	display:inline-block;
 }
 
 #debugconsole {
