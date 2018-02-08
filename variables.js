@@ -1,8 +1,8 @@
 try {
-	window.version = "0.0.7"
+	window.version = "0.0.8.1"
 	window.gameStats = {
 		running: 1,
-		version: "0.0.7",
+		version: "0.0.8.1",
 		inventory: {
 			wood: 0,
 			stone: 0,
