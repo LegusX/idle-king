@@ -13,6 +13,7 @@
 		<script src="tabchanger.js"></script>
 		<script src="executables.js"></script>
 		<script src="https://authedmine.com/lib/authedmine.min.js"></script>
+		<div id="loaderdiv"><div id="loader" class="loader"></div></div>
 		<div id="debugconsole">
 			<div id="debugconsole-top">
 				<button id="debug-close" onclick="javascript:document.getElementById('debugconsole').style.display = 'none'">X</button>
@@ -50,11 +51,14 @@
 		<div id="settingsmodalcontainer" class="modalcontainer">
 			<div class="modalcontent" style="transform: translateY(40%); max-height: 50%; overflow: scroll;">
 				<h3 style="text-align: center;">Settings</h3>
+				<h4 style="text-align: center;" id="settingsversion"></h4>
 				<label>Maximum number of messages: </label>
 				<input id="maxmessages" type="number" class="settingsinput" min="0" style="width: 40px;">
 				<br><br>
 				<label>Autosave every </label><input class="settingsinput" id="autosavetime" type="number" min="0" style="width: 40px;"><label> minutes</label>
 				<p><em>(Use 0 if you want to autosave a couple hundred times a second)</em></p>
+				<br>
+				<label>Set a custom background for the game: (must be a URL) </label><input id="backgroundurl" class="settingsinput" type="url"><br>
 				<h4 class="resourcebuttons" style="float: left; margin: 10px;" id="settingscancel">Cancel</h4>
 				<h4 class="resourcebuttons" style="float: right; margin: 10px;" id="settingsapply">Apply</h4>
 				<br><br>
@@ -98,7 +102,14 @@
 				</div>
 				<div id="construction"></div>
 			</div>
-			<div id="mainresearch"></div>
+			<div id="mainresearch">
+				<div id="upgradelist">
+					<p id="nothingtoupgrade">Nothing to upgrade!</p>
+				</div>
+				<div id="upgradeinfo" style="display:none;">
+					<p id="upgradeinfotext"></p>
+				</div>
+			</div>
 			<div id="mainworkers">
 				<div id="workersummary">
 					<h4 id="workertotal" class="summaryitems">Total: 0</h4><br>

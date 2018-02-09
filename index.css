@@ -1,3 +1,41 @@
+.loader {
+    border: 16px solid #000000; /* Light grey */
+    border-top: 16px solid #ffffff; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 1.5s linear infinite;
+    margin: -60px 0 0 -60px;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#loaderdiv {
+	height: 100%;
+	width: 100%;
+	z-index: 100000;
+	position:fixed;
+	/*display: float;*/
+	background-color: black;
+	animation-name: animatebottom;
+}
+
+@-webkit-keyframes animatebottom {
+  from {opacity:1}
+  to {opacity:0 }
+}
+
+@keyframes animatebottom {
+  from{opacity:1}
+  to{opacity:0}
+}
+
 #header {
 	margin: 0;
 	padding: 0;
@@ -6,6 +44,7 @@
 	min-height: fit-content;
 	display: inline-block;
 	box-shadow: 1px 1px 1px 1px #4d4d4d;
+	background-color: white;
 }
 
 .header {
@@ -44,6 +83,7 @@
 	box-shadow: 2px 2px 2px 2px #4d4d4d;
 	padding: 0 10px;
 	margin-right: 5px;
+	background-color: white;
 }
 
 #maincontent {
@@ -60,6 +100,7 @@
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+    background-color: white;
 }
 
 .resourcebuttons:hover {
@@ -74,6 +115,7 @@
 	width: fit-content;
 	padding: 0 10px;
 	vertical-align: top;
+	background-color: white;
 }
 #construction {
 	box-shadow: 2px 2px 2px 2px #4d4d4d;
@@ -81,6 +123,7 @@
 	width: fit-content;
 	padding: 0 10px;
 	vertical-align: top;
+	background-color: white;
 }
 
 #messagebar {
@@ -92,6 +135,7 @@
 	max-width: 200px;
 	margin-right: 5px;
 	vertical-align: top;
+	background-color: white;
 }
 #buildingcount {
 	box-shadow: 2px 2px 2px 2px #4d4d4d;
@@ -100,7 +144,9 @@
 	float: right;
 	margin-right: 5px;
 	vertical-align: top;
+	background-color: white;
 }
+
 
 /*.modal {*/
 /*	border: 2px solid;*/
@@ -168,6 +214,7 @@ body {
     box-shadow: 2px 2px 2px 2px #4d4d4d;
     border: 1px;
     padding: 5px;
+    background-color: white;
 }
 
 .achievementlist {
@@ -208,6 +255,7 @@ body {
 	margin-right: 5px;
 	vertical-align: top;
     box-shadow: 2px 2px 2px 2px #4d4d4d;
+    background-color: white;
 }
 
 .summaryitems {
@@ -231,6 +279,7 @@ body {
 	width: 100%;
 	position: fixed;
 	bottom: 0;
+	background-color: white;
 }
 #debugconsole-top {
 	width: 100%;
@@ -251,4 +300,25 @@ body {
 	border-bottom: 1px black solid;
 	border-top: 1px black solid;
 	bottom: 20px;
+}
+
+#upgradeinfo  {
+	width: fit-content;
+	max-width: 20%;
+	padding: 10px;
+	float: right;
+	margin-right: 5px;
+	vertical-align: top;
+    box-shadow: 2px 2px 2px 2px #4d4d4d;
+    background-color: white;
+}
+
+#upgradelist  {
+	width: fit-content;
+	padding: 0 10px;
+	float: left;
+	margin-right: 5px;
+	vertical-align: top;
+    box-shadow: 2px 2px 2px 2px #4d4d4d;
+    background-color: white;
 }

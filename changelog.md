@@ -1,3 +1,13 @@
+# Update 0.0.9
+* Libraries
+* Upgrade system
+* New Research tab.
+* Added the ability to change the background of the window to an image URL (in the settings)
+* Added a loading screen to cover up the ugliness that sits on top of everything while the game loads.
+* Fixed bug with professions not appearing after you buy their building
+* Added a little text box to state what version of the game you're running in the settings menu
+* Probably fixed other small bugs I forgot to write down here.
+
 # Update 0.0.8
 * Finished workforce
 * Fixed bug with village naming popup coming too early
