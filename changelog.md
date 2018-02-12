@@ -1,6 +1,9 @@
 # Update 0.0.10
-* Building Creator
 * Truncating resource values when multiplied.
+* Fixed hiring bug, for real this time
+* Added discord and github links
+* background images fit to screen
+* fixed game not working after reload (I think)
 
 # Update 0.0.9
 * Libraries
