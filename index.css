@@ -88,6 +88,7 @@
 
 #maincontent {
 	width: auto;
+	height: 100%;
 }
 
 .resourcebuttons {
@@ -195,6 +196,9 @@
 body {
 	padding: 0;
 	margin: 0;
+	background-size: cover;
+	width: 100%;
+	height: 100%;
 }
 
 #settingsinput {
@@ -321,4 +325,19 @@ body {
 	vertical-align: top;
     box-shadow: 2px 2px 2px 2px #4d4d4d;
     background-color: white;
+}
+
+footer {
+	position:fixed;
+	bottom: 0;
+	right: 0;
+	border-top: 2px solid black;
+	max-height: 40px;
+	width: 100%;
+	background-color: white;
+}
+
+.footerlink {
+	float:right;
+	margin:2px;
 }

@@ -277,14 +277,20 @@ function setup() {
 		});
 		document.getElementById("maxmessages").value = 15;
 		document.getElementById("settingsversion").textContent = "Civ Clicker, Version "+window.version
+		document.getElementById("dimensionstext").textContent = `Window dimensions: ${window.innerWidth}x${window.innerHeight}`
 
 		Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function (item) {
 			if (document.getElementById(item + "count") === null) {
-				newResource = document.createElement("h4");
+				let newResource = document.createElement("h4");
 				newResource.id = item + "count";
 				newResource.textContent = item.split("")
 				if (window.gameStats.inventory[item] === 0) newResource.style.display = "none"
 				document.getElementById("inventory").appendChild(newResource);
+				// let image = document.createElement("img");
+				// image.src = "assets/"+item+".png"
+				// image.style.display = "inline-block"
+				// document.getElementById("inventory").appendChild(image);
+				// document.getElementById("inventory").appendChild(document.createElement("br"));
 			}
 			document.getElementById(item + "count").title = Math.floor(window.gameStats.workforce[item] * window.gameStats.workincrements[item] * window.gameStats.running) + " " + item + "/second";
 		});
@@ -312,12 +318,12 @@ function setup() {
 					if (typeof item === "undefined") return;
 					var canup = []
 					Object.getOwnPropertyNames(item.workchanges).forEach(function (sitem) {
-						if (window.gameStats.inventory[sitem] + this.workchanges[sitem] * this.amount * window.gameStats.running > 0) canup.push(true)
+						if (Math.floor(window.gameStats.inventory[sitem] + this.workchanges[sitem] * this.amount * window.gameStats.running > 0)) canup.push(true)
 						else canup.push(false)
 					}, item)
 					if (!canup.includes(false)) {
 						Object.getOwnPropertyNames(item.workchanges).forEach(function (sitem) {
-							window.gameStats.inventory[sitem] += this.workchanges[sitem] * this.amount * window.gameStats.running
+							window.gameStats.inventory[sitem] += Math.floor(this.workchanges[sitem] * this.amount * window.gameStats.running)
 						}, item)
 					}
 				});
@@ -330,7 +336,11 @@ function setup() {
 						if (typeof window.gameStats.name === "undefined" && window.gameStats.workforce.total >= 20) document.getElementById("newgamecontainer").style.display = ""
 						document.getElementById("confirmnewgame").addEventListener("click", function () {
 							var input = document.getElementById("namepicker")
+							if (window.RGV.namepicker) return;
+							window.RGV.namepicker = true
 							if (input.value === "") return alert("You need to choose a name!")
+							if (input.value.length > 12) return alert("Your name must be 12 characters or less!");
+							window.RGV.namepicker = false
 							else {
 								window.gameStats.name = input.value
 								document.getElementById("newgamecontainer").style.display = "none"
@@ -389,7 +399,7 @@ var loop = function () {
 				// window.gameStats.inventory[item] += Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*(Date.now()-window.lastFocus)*window.gameStats.running);
 				// window.misc.time+=(Date.now()-window.lastFocus);
 				Object.getOwnPropertyNames(item.workchanges).forEach(function (sitem) {
-					window.gameStats.inventory[sitem] += item.workchanges[sitem] * amount * (Date.now() - window.lastFocus) * window.gameStats.running
+					window.gameStats.inventory[sitem] += Math.floor(item.workchanges[sitem] * amount * (Date.now() - window.lastFocus) * window.gameStats.running)
 				})
 			});
 		}
@@ -414,7 +424,7 @@ var loop = function () {
 				}
 				if (typeof item.upgrades !== "undefined" && item.upgrades.length > 0) {
 					for (var i = 0; i < item.upgrades.length; i++) {
-						if (!item.upgrades[i].unlocked && !window.gameStats.upgrades.includes(item.name)) {
+						if (!item.upgrades[i].unlocked && !window.gameStats.upgradelist.includes(item.name)) {
 							window.buildings[getBuildingLocation(item.name)].upgrades[i].unlocked = true
 							var upgrade = item.upgrades[i]
 							setupUpgrade(upgrade, i)
@@ -422,7 +432,13 @@ var loop = function () {
 					}
 				}
 				document.getElementById(item.name).title = resourceList;
-				return;
+				// return;
+			}
+			if (item.amount > 0 && typeof item.workforce !== "undefined") {
+				document.getElementById("worker"+item.workforce.name+"+").style.display = ""
+				document.getElementById("worker"+item.workforce.name+"-").style.display = ""
+				document.getElementById("worker"+item.workforce.name).style.display = ""
+				document.getElementById("workername"+item.workforce.name).style.display = ""
 			}
 			var unlocked = []
 			item.resources.forEach(function (resource) {
@@ -454,13 +470,15 @@ var loop = function () {
 		document.getElementById("workeridle").textContent = "Idle: " + window.gameStats.workforce.idle
 
 		var kids = document.getElementById("workersummary").children
-		for (var y = 0; y < kids.length; y++) {
-			var kid = kids[y]
-			if (!kid.id.includes("total") && !kid.id.includes("idle") && !kid.id.includes("-") && !kid.id.includes("+") && kid.id.replace("worker", "") !== "" && !kid.id.includes("name")) {
-				// console.log(findBuild(findWork(kid.id.replace("worker","")).owner))
-				var calc = findWork(kid.id.replace("worker", "")).maxchange * findBuild(findWork(kid.id.replace("worker", "")).owner).amount
-				document.getElementById(kid.id).max = (calc > findWork(kid.id.replace("worker", "")).amount + window.gameStats.workforce.idle) ? window.gameStats.workforce.idle + findBuild(findWork(kid.id.replace("worker", "")).owner).amount : calc
-				// console.log(calc > findWork(kid.id.replace("worker","")).amount+window.gameStats.workforce.idle)
+		if (kids.length > 0) {
+			for (var y = 0; y < kids.length; y++) {
+				var kid = kids[y]
+				if (!kid.id.includes("total") && !kid.id.includes("idle") && !kid.id.includes("-") && !kid.id.includes("+") && kid.id.replace("worker", "") !== "" && !kid.id.includes("name")) {
+					// console.log(findBuild(findWork(kid.id.replace("worker","")).owner))
+					var calc = findWork(kid.id.replace("worker", "")).maxchange * findBuild(findWork(kid.id.replace("worker", "")).owner).amount
+					document.getElementById(kid.id).max = (calc > findWork(kid.id.replace("worker", "")).amount + window.gameStats.workforce.idle) ? window.gameStats.workforce.idle + findBuild(findWork(kid.id.replace("worker", "")).owner).amount : calc
+					// console.log(calc > findWork(kid.id.replace("worker","")).amount+window.gameStats.workforce.idle)
+				}
 			}
 		}
 	} catch (e) {

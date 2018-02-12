@@ -152,7 +152,7 @@ function createWork(item) {
 			if (typeof item.workforce === "undefined") return;
 			if (document.getElementById("workername" + item.workforce.name) === null && document.getElementById("worker" + item.workforce.name) === null) {
 				worksummary.appendChild(document.createElement("br"));
-
+				
 				var newWorkerText = document.createElement("p");
 				newWorkerText.textContent = item.workforce.name + ": ";
 				newWorkerText.classList.add("summaryitems");
@@ -292,7 +292,7 @@ function setupUpgrade(upgrade, location) {
 						upgrade.event.forEach(function(item){
 							launchEvent(item, 0);
 						})
-						window.gameStats.upgrades.push(upgrade.name)
+						window.gameStats.upgradelist.push(upgrade.name)
 					} catch (e) {
 						console.log(e)
 					}

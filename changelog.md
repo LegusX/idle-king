@@ -1,3 +1,7 @@
+# Update 0.0.10
+* Building Creator
+* Truncating resource values when multiplied.
+
 # Update 0.0.9
 * Libraries
 * Upgrade system
