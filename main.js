@@ -338,13 +338,19 @@ function setup() {
 							var input = document.getElementById("namepicker")
 							if (window.RGV.namepicker) return;
 							window.RGV.namepicker = true
-							if (input.value === "") return alert("You need to choose a name!")
-							if (input.value.length > 12) return alert("Your name must be 12 characters or less!");
-							window.RGV.namepicker = false
+							if (input.value === "") {
+								window.RGV.namepicker = false
+								return alert("You need to choose a name!")
+							}
+							if (input.value.length > 12) {
+								window.RGV.namepicker = false
+								return alert("Your name must be 12 characters or less!");
+							}
 							else {
 								window.gameStats.name = input.value
 								document.getElementById("newgamecontainer").style.display = "none"
 								document.title = "Civ Clicker - " + input.value
+								window.RGV.namepicker = false
 							}
 						})
 						newMessage({
