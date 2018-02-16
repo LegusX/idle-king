@@ -68,6 +68,7 @@ function loadGame(datas) {
 			return newGame();
 		}
 		window.gameStats = data.gameStats;
+		data.buildings.length = window.buildings.length
 		var buildings = data.buildings;
 		// for(var i=0;i<window.buildings.length;i++) {
 		// 	Object.getOwnPropertyNames(window.buildings[i]).forEach(function(item){
