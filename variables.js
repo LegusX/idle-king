@@ -1,10 +1,10 @@
 try {
-	window.version = "0.0.10"
+	window.version = "0.0.10.1"
 	window.gameStats = {
 		resources: ["wood", "stone", "wheat", "science"],
 		upgradelist: [],
 		running: 1,
-		version: "0.0.10",
+		version: "0.0.10.1",
 		inventory: {},
 		selfincrements: {},
 		workforce: {
