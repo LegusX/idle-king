@@ -1,3 +1,12 @@
+# Update 0.0.11
+* Fixed favicon
+* Fixed Github/Discord icons
+* Made a new popup in an attempt to get people to make me not broke
+* Fixed the never ending loading glitch for real this time
+* Alerts from the "New Village" popup no longer spam the crap out of you
+* Added a "panic button" to delete save data when the game won't stop loading
+* Moved the "delete save data" button to the settings
+
 # Update 0.0.10
 * Truncating resource values when multiplied.
 * Fixed hiring bug, for real this time

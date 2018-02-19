@@ -67,8 +67,8 @@ function loadGame(datas) {
 			alert("Hey there, sorry, but it looks like your current save data doesn't work with this version of the game! \n\nUnfortunately, backwards compatibility of game data is sketchy at best, so the game will automatically delete your save data now in order to not break anything. \n\nSorry about that. :/");
 			return newGame();
 		}
-		window.gameStats = data.gameStats;
 		data.buildings.length = window.buildings.length
+		window.gameStats = data.gameStats;
 		var buildings = data.buildings;
 		// for(var i=0;i<window.buildings.length;i++) {
 		// 	Object.getOwnPropertyNames(window.buildings[i]).forEach(function(item){
@@ -172,7 +172,7 @@ function setup() {
 		//because you're waiting for inspiration to hit you and tell you what you have been doing wrong this entire time with the code...
 		//Yeah.
 		//I should probably stop that...
-		["newgamecontainer", "debugconsole", "notreadyrewards", "statsmodalcontent", "statsmodalcontainer", "settingsmodalcontainer", "rewardsmodalcontainer", "workers", "buildingcount", "home", "research", "construction", "inventory", "messagebar", "gatherstone", "gathergold", "gatherwheat", "mainresearch", "mainworkers"].forEach(function (item) {
+		["uhohcontainer", "rewardadcontainer","newgamecontainer", "debugconsole", "notreadyrewards", "statsmodalcontent", "statsmodalcontainer", "settingsmodalcontainer", "rewardsmodalcontainer", "workers", "buildingcount", "home", "research", "construction", "inventory", "messagebar", "gatherstone", "gathergold", "gatherwheat", "mainresearch", "mainworkers"].forEach(function (item) {
 			document.getElementById(item).style.display = "none";
 		});
 
@@ -180,8 +180,7 @@ function setup() {
 		//But at least they look better than the default button. Y'know, those things that are actually meant to be buttons
 		//instead of me throwing some divs and paragraphs together
 		//that change color to be all fancy
-		//Yeah...
-		//I'm talking to myself again.
+		//I'm talking to myself again, aren't I?
 		document.getElementById("stats").addEventListener("click", function () {
 			document.getElementById("statsmodalcontainer").style.display = "";
 			document.getElementById("statsmodalcontent").style.display = "";
@@ -211,6 +210,7 @@ function setup() {
 			if (typeof CoinHive === "undefined") {
 				document.getElementById("readyrewards").style.display = "none"
 				document.getElementById("notreadyrewards").style.display = ""
+				window.misc.advertise = true
 			} else {
 				document.getElementById("readyrewards").style.display = ""
 				document.getElementById("notreadyrewards").style.display = "none"
@@ -303,6 +303,25 @@ function setup() {
 			window.gameStats.inventory.wood += window.gameStats.selfincrements.wood;
 			window.misc.resourceclicks++
 		});
+		document.getElementById("confirmnewgame").addEventListener("click", function () {
+			var input = document.getElementById("namepicker")
+			if (window.RGV.namepicker) return;
+			window.RGV.namepicker = true
+			if (input.value === "") {
+				alert("You need to choose a name!")
+				return window.RGV.namepicker = false
+			}
+			if (input.value.length > 12) {
+				alert("Your name must be 12 characters or less!");
+				return window.RGV.namepicker = false
+			}
+			else {
+				window.gameStats.name = input.value
+				document.getElementById("newgamecontainer").style.display = "none"
+				document.title = "Civ Clicker - " + input.value
+				window.RGV.namepicker = false
+			}
+		})
 
 		window.incrementer = setInterval(function () {
 			try {
@@ -330,36 +349,21 @@ function setup() {
 				});
 				// window.gameStats.inventory[item] += Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*window.gameStats.running);
 				window.misc.time++
-					if (getRandomInt(0, 10) === 4 && document.getElementById("workers").style.display !== "none" && window.gameStats.workforce.total < window.gameStats.workforce.max) {
-						moreVillagers = getRandomInt(1, 5 >= window.gameStats.workforce.max - window.gameStats.workforce.total ? window.gameStats.workforce.max - window.gameStats.workforce.total + 1 : 6)
-						if (moreVillagers + window.gameStats.workforce.total > window.gameStats.workforce.max) moreVillagers = window.gameStats.workforce.max - window.gameStats.workforce.total
-						if (moreVillagers === 0) return;
-						if (typeof window.gameStats.name === "undefined" && window.gameStats.workforce.total >= 20) document.getElementById("newgamecontainer").style.display = ""
-						document.getElementById("confirmnewgame").addEventListener("click", function () {
-							var input = document.getElementById("namepicker")
-							if (window.RGV.namepicker) return;
-							window.RGV.namepicker = true
-							if (input.value === "") {
-								window.RGV.namepicker = false
-								return alert("You need to choose a name!")
-							}
-							if (input.value.length > 12) {
-								window.RGV.namepicker = false
-								return alert("Your name must be 12 characters or less!");
-							}
-							else {
-								window.gameStats.name = input.value
-								document.getElementById("newgamecontainer").style.display = "none"
-								document.title = "Civ Clicker - " + input.value
-								window.RGV.namepicker = false
-							}
-						})
-						newMessage({
-							value: moreVillagers + " villager(s) have moved into your village!"
-						}, -1)
-						window.gameStats.workforce.total += moreVillagers
-						window.gameStats.workforce.idle += moreVillagers
-					}
+				if (window.misc.time > 1800 && !window.misc.advertise) {
+					document.getElementById("rewardadcontainer").style.display = ""
+					window.misc.advertise = true
+				}
+				if (getRandomInt(0, 10) === 4 && document.getElementById("workers").style.display !== "none" && window.gameStats.workforce.total < window.gameStats.workforce.max) {
+					moreVillagers = getRandomInt(1, 5 >= window.gameStats.workforce.max - window.gameStats.workforce.total ? window.gameStats.workforce.max - window.gameStats.workforce.total + 1 : 6)
+					if (moreVillagers + window.gameStats.workforce.total > window.gameStats.workforce.max) moreVillagers = window.gameStats.workforce.max - window.gameStats.workforce.total
+					if (moreVillagers === 0) return;
+					if (typeof window.gameStats.name === "undefined" && window.gameStats.workforce.total >= 20) document.getElementById("newgamecontainer").style.display = ""
+					newMessage({
+						value: moreVillagers + " villager(s) have moved into your village!"
+					}, -1)
+					window.gameStats.workforce.total += moreVillagers
+					window.gameStats.workforce.idle += moreVillagers
+				}
 			} catch (e) {
 				console.log(e + "NOPE")
 			}

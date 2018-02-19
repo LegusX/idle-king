@@ -161,5 +161,6 @@ function achieve(event, notify) {
 		achievementItem.classList.add("achievementlist")
 		document.getElementById("achievemodalcontent").appendChild(achievementItem);
 		window.unlockedAchieve.push(event)
+		return;
 	}catch(e){console.log(e)}
 }

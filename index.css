@@ -331,7 +331,7 @@ footer {
 	position:fixed;
 	bottom: 0;
 	right: 0;
-	border-top: 2px solid black;
+	box-shadow: 2px 2px 4px 2px #4d4d4d;
 	max-height: 40px;
 	width: 100%;
 	background-color: white;

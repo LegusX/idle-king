@@ -30,7 +30,8 @@ try {
 	window.misc = {
 		time: 0,
 		clicks: 0,
-		resourceclicks: 0
+		resourceclicks: 0,
+		advertise: false
 	}
 
 	window.buildings = [{
