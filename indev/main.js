@@ -389,9 +389,6 @@ function setup() {
 				if (typeof event.reqs === "undefined" || event.reqs.length < 1 || !reqs.includes(false)) {
 					if (getRandomInt(0, event.chance) === 1) randomLauncher(event)
 				}
-				else{
-					console.log("Some requirement failed!")
-				}
 			}
 		}, 60000)
 
@@ -415,6 +412,11 @@ function setup() {
 				console.error(e)
 			}
 		}, 1000 * 60 * window.settings.autosaveTime);
+		if (document.URL.includes("indev")) {
+			document.getElementById("uhohhead").textContent = "WARNING"
+			document.getElementById("uhohcontent").innerHTML = "It appears as though you're using the development version of Idle King! In case you do not already know, this version has the latest updates, without significant bug testing, so do be warned that the possibility of a save being corrupted is very high.<hr><strong>NOTE:</strong> If you do find any bugs in this version, please report them in the <a href='https://discord.gg/7VBNwxu' target='_blank'>official Discord server</a> and make sure and state that you're using the development version of the game!"
+			document.getElementById("uhohcontainer").style.display = ""
+		}
 
 	} catch (e) {
 		console.warn(e + "UHOH")
