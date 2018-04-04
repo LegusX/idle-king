@@ -290,7 +290,7 @@ function setupUpgrade(upgrade, location) {
 							return;
 						})
 						upgrade.event.forEach(function(item){
-							launchEvent(item, 0);
+							launchEvent(item, 0, building);
 						})
 						window.gameStats.upgradelist.push(upgrade.name)
 					} catch (e) {
@@ -308,5 +308,31 @@ function setupUpgrade(upgrade, location) {
 function getBuildingLocation(name) {
 	for (var i = 0; i < window.buildings.length; i++) {
 		if (window.buildings[i].name === name) return i
+	}
+}
+
+function getWorkforceTotal() {
+	let total = 0
+	for (let i in window.buildings) {
+		let b = window.buildings[i]
+		if (typeof b.workforce !== "undefined") total+=b.workforce.amount
+	}
+	return total;
+}
+
+function numberSplitter(n) {
+	var a = [];
+	while (n > 0) {
+		var s = Math.round(Math.random()*n);
+		a.push(s);
+		n -= s;
+	}
+	return a
+}
+
+function addWorkers(n) {
+	let s = ["idle", "total", "max"]
+	for (let i in s) {
+		window.gameStats.workforce[s[i]]+=n
 	}
 }

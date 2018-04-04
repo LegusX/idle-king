@@ -2,9 +2,25 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="index.css">
-		<title>Civ Clicker</title>
+		<title>Idle King</title>
 		<link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
 		<link rel="icon" href="./favicon.ico" type="image/x-icon">
+		<link href="https://fonts.googleapis.com/css?family=Cormorant+Garamond" rel="stylesheet">
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-114417556-1"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+		
+		  gtag('config', 'UA-114417556-1');
+		</script>
+		<meta property="og:url" content="https://legusx.github.io/idle-king"/>
+		<meta property="og:title" content="Idle King"/>
+		<meta property="og:description" content="An idle game about building up and ruling your own civilization while doing pretty much nothing. Because that's what great kings do, right?"/>
+		<meta property="og:image" content="https://legusx.github.io/idle-king/assets/fulllogo.png"/>
+		
+		<meta name="Description" content="An idle game about building up and ruling your own civilization while doing pretty much nothing. Because that's what great kings do, right?">
 	</head>
 	<body>
 		<script src="main.js"></script>
@@ -27,6 +43,12 @@
 				<div id="uhohcontent"></div>
 			</div>
 		</div>
+		<div id="eventcontainer" class="modalcontainer">
+			<div id="eventmodal" class="modalcontent">
+				<h3 style="text-align: center;" id="eventhead"></h3>
+				<h4 id="eventcontent"></h4>
+			</div>
+		</div>
 		<div id="rewardadcontainer" class="modalcontainer">
 			<div id="rewardadmodal" class="modalcontent" style="transform: translateY(30%);">
 				<h3 style="text-align: center;">Hey there!</h3>
@@ -43,7 +65,7 @@
 				<h3 style="text-align: center;">The birth of a village</h3>
 				<h4>Congratulations! After having 20 people move into your village, you can officially call yourself a village!</h4>
 				<h4>What would you like to name your village?</h4>
-				<input class="summarypinput" id="namepicker">
+				<input class="summarypinput" id="namepicker" maxlength="12">
 				<h4 class="resourcebuttons" style="margin: 0 auto" id="confirmnewgame">Confirm</h4>
 			</div>
 		</div>
@@ -69,7 +91,7 @@
 			<div class="modalcontent" style="transform: translateY(40%); max-height: 50%; overflow: scroll;">
 				<h3 style="text-align: center;">Settings</h3>
 				<h4 style="text-align: center;" id="settingsversion"></h4>
-				<button style="text-align: center;" class="headeritems" onclick="javascript:window.localStorage.removeItem('savedata');location.reload(true)">delete save data</button>
+				<button style="text-align: center;" class="headeritems" onclick="javascript:window.localStorage.removeItem('savedata');location.reload(true)">delete save data</button><br>
 				<label>Maximum number of messages: </label>
 				<input id="maxmessages" type="number" class="settingsinput" min="0" style="width: 40px;">
 				<br><br>
@@ -139,7 +161,7 @@
 		</div>
 		<footer>
 			<div class="footerlink"><a target="_blank" href="https://discord.gg/7VBNwxu"><img src="./assets/Discord-Logo-Black.png" width=32 height=32></a></div>
-			<div class="footerlink"><a target="_blank" href="https://github.com/LegusX/civ-clicker"><img src="./assets/GitHub-Mark-32px.png"></a></div>
+			<div class="footerlink"><a target="_blank" href="https://github.com/LegusX/idle-king"><img src="./assets/GitHub-Mark-32px.png"></a></div>
 		</footer>
 	</body>
 </html>

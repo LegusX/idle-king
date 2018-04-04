@@ -199,6 +199,7 @@ body {
 	background-size: cover;
 	width: 100%;
 	height: 100%;
+	font-family: 'Cormorant Garamond', serif;
 }
 
 #settingsinput {
@@ -210,7 +211,7 @@ body {
 .achievement {
 	position: fixed;
 	right: 20px;
-	bottom: 20px;
+	bottom: 55px;
 	max-width: 25%;
 	width: fit-content;
 	height: fit-content;
@@ -219,6 +220,7 @@ body {
     border: 1px;
     padding: 5px;
     background-color: white;
+    z-index: 10;
 }
 
 .achievementlist {
@@ -331,7 +333,7 @@ footer {
 	position:fixed;
 	bottom: 0;
 	right: 0;
-	box-shadow: 2px 2px 4px 2px #4d4d4d;
+	box-shadow: 0px -2px 2px 2px #4d4d4d;
 	max-height: 40px;
 	width: 100%;
 	background-color: white;

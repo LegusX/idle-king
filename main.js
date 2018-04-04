@@ -89,7 +89,7 @@ function loadGame(datas) {
 		setup();
 		setupWorkforce();
 
-		if (window.gameStats.name !== undefined) document.title = "Civ Clicker - " + window.gameStats.name
+		if (window.gameStats.name !== undefined) document.title = "Idle King - " + window.gameStats.name
 		if (document.getElementById("inventory").style.display === "none") document.getElementById("inventory").style.display = "";
 		if (document.getElementById("construction").style.display === "none") document.getElementById("construction").style.display = "";
 
@@ -150,7 +150,7 @@ function loadGame(datas) {
 			});
 		}
 		newMessage({
-			value: "Welcome back to Civ Clicker!"
+			value: "Welcome back to Idle King!"
 		});
 		fade(document.getElementById("loaderdiv"))
 		fade(document.getElementById("loader"))
@@ -172,7 +172,14 @@ function setup() {
 		//because you're waiting for inspiration to hit you and tell you what you have been doing wrong this entire time with the code...
 		//Yeah.
 		//I should probably stop that...
-		["uhohcontainer", "rewardadcontainer","newgamecontainer", "debugconsole", "notreadyrewards", "statsmodalcontent", "statsmodalcontainer", "settingsmodalcontainer", "rewardsmodalcontainer", "workers", "buildingcount", "home", "research", "construction", "inventory", "messagebar", "gatherstone", "gathergold", "gatherwheat", "mainresearch", "mainworkers"].forEach(function (item) {
+		let vanishList = ["notreadyrewards", "workers", "buildingcount", "home", "research", "construction", "inventory", "messagebar", "gatherstone", "gathergold", "gatherwheat", "mainresearch", "mainworkers"]
+		let eList = document.querySelectorAll('[id$="container"]')
+		for (var u in eList) {
+			if (typeof eList[u].id !== "undefined") vanishList.push(eList[u].id)
+		}
+		vanishList.push()
+		console.log(vanishList)
+		vanishList.forEach(function (item) {
 			document.getElementById(item).style.display = "none";
 		});
 
@@ -277,7 +284,7 @@ function setup() {
 			document.getElementById("settingsmodalcontainer").style.display = "none";
 		});
 		document.getElementById("maxmessages").value = 15;
-		document.getElementById("settingsversion").textContent = "Civ Clicker, Version "+window.version
+		document.getElementById("settingsversion").textContent = "Idle King, Version "+window.version
 		document.getElementById("dimensionstext").textContent = `Window dimensions: ${window.innerWidth}x${window.innerHeight}`
 
 		Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function (item) {
@@ -318,7 +325,7 @@ function setup() {
 			else {
 				window.gameStats.name = input.value
 				document.getElementById("newgamecontainer").style.display = "none"
-				document.title = "Civ Clicker - " + input.value
+				document.title = "Idle King - " + input.value
 				window.RGV.namepicker = false
 			}
 		})
@@ -338,12 +345,12 @@ function setup() {
 					if (typeof item === "undefined") return;
 					var canup = []
 					Object.getOwnPropertyNames(item.workchanges).forEach(function (sitem) {
-						if (Math.floor(window.gameStats.inventory[sitem] + this.workchanges[sitem] * this.amount * window.gameStats.running > 0)) canup.push(true)
+						if ((window.gameStats.inventory[sitem] + this.workchanges[sitem] * this.amount * window.gameStats.running) > 0) canup.push(true)
 						else canup.push(false)
 					}, item)
 					if (!canup.includes(false)) {
 						Object.getOwnPropertyNames(item.workchanges).forEach(function (sitem) {
-							window.gameStats.inventory[sitem] += Math.floor(this.workchanges[sitem] * this.amount * window.gameStats.running)
+							window.gameStats.inventory[sitem] += Number((this.workchanges[sitem] * this.amount * window.gameStats.running).toFixed(1))
 						}, item)
 					}
 				});
@@ -368,6 +375,25 @@ function setup() {
 				console.log(e + "NOPE")
 			}
 		}, 1000);
+		
+		//fires once a minute
+		window.randomEvent = setInterval(function(){
+			for (var i in window.randomEvents) {
+				let event = window.randomEvents[i]
+				let reqs = []
+				if (typeof event.reqs !== "undefined" && event.reqs.length > 0) {
+					for (var j in event.reqs) {
+						reqs.push(event.reqs[j]())
+					}
+				}
+				if (typeof event.reqs === "undefined" || event.reqs.length < 1 || !reqs.includes(false)) {
+					if (getRandomInt(0, event.chance) === 1) randomLauncher(event)
+				}
+				else{
+					console.log("Some requirement failed!")
+				}
+			}
+		}, 60000)
 
 		window.autosaver = setInterval(function () {
 			try {
@@ -428,8 +454,8 @@ var loop = function () {
 		window.buildings.forEach(function (item) {
 			if (item.unlocked === true) {
 				var resourceList = "";
-				if (item.amount >= item.max && item.max > 0) return document.getElementById(item.name).style.cursor = "not-allowed";
-				else if (item.amount < item.max && document.getElementById(item.name).style.cursor === "not-allowed") document.getElementById(item.name).style.cursor = "pointer";
+				// if (item.amount >= item.max && item.max > 0) return document.getElementById(item.name).style.cursor = "not-allowed";
+				// else if (item.amount < item.max && document.getElementById(item.name).style.cursor === "not-allowed") document.getElementById(item.name).style.cursor = "pointer";
 				for (var i = 0; i < item.resources.length; i++) {
 					resourceList += item.resources[i].name + ": " + item.resources[i].value + "\n";
 				}
@@ -492,6 +518,33 @@ var loop = function () {
 				}
 			}
 		}
+		if (window.gameStats.workforce.total > window.gameStats.workforce.max) {
+			window.gameStats.workforce.total = window.gameStats.workforce.max
+		}
+		if(window.gameStats.workforce.total < window.gameStats.workforce.idle+getWorkforceTotal()) {
+			let difference = window.gameStats.workforce.idle+getWorkforceTotal()-window.gameStats.workforce.total
+			console.log(difference)
+			if (window.gameStats.workforce.idle >= difference) window.gameStats.workforce.idle -= difference
+			else {
+				difference -= window.gameStats.workforce.idle
+				window.gameStats.workforce.idle = 0
+				for (let i in window.buildings) {
+					console.log(difference)
+					if (typeof window.buildings[i].workforce !== "undefined") {
+						// difference -= window.buildings[i].workforce.amount
+						console
+						if (difference - window.buildings[i].workforce.amount < 0) {
+							window.buildings[i].workforce.amount -= difference
+							difference = 0
+						}
+						else {
+							difference -= window.buildings[i].workforce.amount
+							window.buildings[i].workforce.amount = 0
+						}
+					}
+				}
+			}
+		}
 	} catch (e) {
 		console.log(e + "TET")
 	}
@@ -499,19 +552,18 @@ var loop = function () {
 }
 
 window.addEventListener("keydown", function (e) {
-	//HEY. NO CHEATING
-	// fakeKonami = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"]
-	// window.AREYOUTHERE = []
-	// if (fakeKonami.includes(e.key)) {
-	// 	window.AREYOUTHERE.push(e.key)
-	// 	if (window.AREYOUTHERE.length === fakeKonami.length) {
-	// 		if (window.AREYOUTHERE === fakeKonami) {window.gameStats.inventory.wood+=1000000}
-	// 	}
-	// }
+	//Just for the sake of speeding things up, because I don't feel like playing through the game every stinking time.
 	if (e.key === "q") {
 		Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function (item) {
 			window.gameStats.inventory[item] += 1000000
 		})
+	}
+	if (e.key === "w") {
+		window.cheatLoop = setInterval(()=>{
+			Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function (item) {
+				window.gameStats.inventory[item] += 1000000
+			})
+		},250)
 	}
 })
 
@@ -532,7 +584,7 @@ var buildingCreate = function (e) {
 					}
 					if (typeof window.buildings[i].event !== "undefined") {
 						for (var k = 0; k < window.buildings[i].event.length; k++) {
-							window.buildings[i].event[k] = launchEvent(window.buildings[i].event[k], window.buildings[i].amount)
+							if (typeof window.buildings[i].event[k] !== "undefined") window.buildings[i].event[k] = launchEvent(window.buildings[i].event[k], window.buildings[i].amount, window.buildings[i])
 						}
 					}
 					window.buildings[i].amount++
@@ -582,6 +634,14 @@ function findBuild(name) {
 	for (var i = 0; i < window.buildings.length; i++) {
 		if (window.buildings[i].name === name) {
 			return window.buildings[i]
+		}
+	}
+}
+
+function findBuildIndex(name) {
+	for (var i = 0; i < window.buildings.length; i++) {
+		if (window.buildings[i].name === name) {
+			return i;
 		}
 	}
 }

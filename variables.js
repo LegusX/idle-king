@@ -1,10 +1,10 @@
 try {
-	window.version = "0.0.10.1"
+	window.version = "0.0.12"
 	window.gameStats = {
 		resources: ["wood", "stone", "wheat", "science"],
 		upgradelist: [],
 		running: 1,
-		version: "0.0.10.1",
+		version: "0.0.12",
 		inventory: {},
 		selfincrements: {},
 		workforce: {
@@ -47,47 +47,42 @@ try {
 			}],
 			extra: 0,
 			multi: 1.1, //How much the resource costs should be multiplied by whenever a new building is bought
+			launchedevents: [],
 			event: [{
 					type: "message", //which event to launch
 					value: "After several seconds of extremely hard work, you built your well desereved new hut. Congratulations", //what value it should launch
 					when: 0, //At how many purchases should it be launched
 					//0 based index
-					launched: false
 				},
 				{
 					type: "newtab",
 					value: "A Wood Hut",
 					when: 0,
 					extra: "home", //what tab to change or just extra info that event needs.
-					launched: false
 				},
 				{
 					type: "message", //which event to launch
 					value: "Okay, that's enough huts. You can stop now", //what value it should launch
 					when: 9, //At how many purchases should it be launched
 					//0 based index
-					launched: false
 				},
 				{
 					type: "message", //which event to launch
 					value: "Seriously, you're starting to embarrass me. Just stop it.", //what value it should launch
 					when: 19, //At how many purchases should it be launched
 					//0 based index
-					launched: false
 				},
 				{
 					type: "message", //which event to launch
 					value: "If you build even one more hut, I will set them on fire, one by one.", //what value it should launch
 					when: 29, //At how many purchases should it be launched
 					//0 based index
-					launched: false
 				},
 				{
 					type: "achieve",
 					value: "He did warn you.",
 					extra: "The narrator burned down your hideous wood huts.",
 					when: 30,
-					launched: false
 				},
 				{
 					type: "message", //which event to launch
@@ -98,12 +93,12 @@ try {
 						high: "buildings", //which global variable to change
 						what: "Wood Hut", //Name of building to change amount of
 						which: "amount",
-						by: 31
+						by: ()=>{window.gameStats.workforce.max-(31*window.buildings[0].changes[0].by);return 31;}
 					},
-					launched: false
 					//0 based index
 				}
 			],
+			firedEvents: [],
 			execute: function () {
 				window.buildings[0].extra = setInterval(function () {
 					if (window.buildings[2].amount > 0 && document.getElementById("workers").style.display === "none") {
@@ -134,7 +129,6 @@ try {
 						type: "message",
 						value: "Twice as big, and half as ugly!",
 						when: 0,
-						launched: false //to satisfy the engine because I'm too lazy to rewrite it
 					}],
 					description: "Since Mr. Narrator is always complaining about the quality of the huts, maybe transforming them all into cottages will help him deal with his need to commit arson?"
 				}
@@ -159,37 +153,34 @@ try {
 				base: 40
 			}],
 			multi: 1.1,
+			launchedevents: [],
 			event: [{
 					type: "message",
 					value: "Hey, look! You can press four buttons now!",
 					when: 0,
-					launched: false
 				},
 				{
 					type: "message",
 					value: "This mountain shall forever be called \"Swiss Cheese Mountain\"",
 					when: 9,
-					launched: false
 				},
 				{
 					type: "message",
 					value: "Now while I'm usually not one to be concerned for your welfare, the amount of holes in this single mountain seems to be unsafe.",
 					when: 29,
-					launched: false
 				},
 				{
 					type: "message",
 					value: "This mountain isn't going to last much longer. o_O",
 					when: 39,
-					launched: false
 				},
 				{
 					type: "message",
 					value: "I give up, it's your death you're begging for",
 					when: 54,
-					launched: false
 				}
 			],
+			firedEvents: [],
 			changes: [{
 				high: "gameStats",
 				what: "selfincrements",
@@ -244,25 +235,24 @@ try {
 				}
 			],
 			multi: 1.1,
+			launchedevents: [],
 			event: [{
 					type: "message",
 					value: "Hey, maybe you won't starve to death now!",
 					when: 0,
-					launched: false
 				},
 				{
 					type: "message",
 					value: "Ooh, you could even feed me now!",
 					when: 5,
-					launched: false
 				},
 				{
 					type: "message",
 					value: "You should probably consider getting some other people to help you, now that you can actually feed them too.",
 					when: 15,
-					launched: false
 				}
 			],
+			firedEvents: [],
 			workforce: {
 				maxchange: 5,
 				amount: 0,
@@ -325,16 +315,15 @@ try {
 					type: "message",
 					value: "You know, as much as I hate those blasted wood huts of yours, you may be able to make them slightly better looking if you researched plans for better ones.",
 					when: 0,
-					launched: false
 				},
 				{
 					type: "newtab",
 					value: "A Small Library",
 					when: 0,
 					extra: "research", //what tab to change or just extra info that event needs.
-					launched: false
 				},
 			],
+			firedEvents: [],
 			workforce: {
 				name: "Librarians",
 				maxchange: 1,
@@ -361,7 +350,7 @@ try {
 				}],
 				event: [{
 					type: "message",
-					value: "Bigger, better, faster, stronger... Wait a second... This seems awfully familiar...",
+					value: "READ FASTER, MY LIBRARIAN SLAVES",
 					when: 0,
 					launched: false //to satisfy the engine because I'm too lazy to rewrite it
 				}],
@@ -369,6 +358,25 @@ try {
 			}]
 		}
 	];
+	
+	window.randomEvents = [
+		{
+			name: "The Plague",
+			description: "The Plague has struck, and {amount0} villagers have died.",
+			changes: [{
+				high: "gameStats",
+				what: "workforce",
+				which: "max",
+				operation: "subtract",
+				by: ()=>{return getRandomInt(Math.ceil(window.gameStats.workforce.total*0.25), Math.ceil(window.gameStats.workforce.total*0.75))}
+			}],
+			reqs: [
+				()=>{return window.gameStats.workforce.total/window.gameStats.workforce.max > 0.75},
+				()=>{return window.gameStats.workforce.total > 30}
+				],
+			chance: 2
+		}
+	]
 
 	window.unlockedAchieve = [];
 	window.achievements = [];

@@ -6,10 +6,12 @@
 //{name:"",value:"",when:""}
 //Look, there's a reason I warned you not to try and make updates to this thing. It won't be easy. o_O
 
-function launchEvent(event, amount) {
+function launchEvent(event, amount, building) {
 	try {
 		if(event.when !== amount || event.when === -1) return event;
-		if(event.launched) return event;
+		if (building.firedEvents.includes(building.event.indexOf(event))) return;
+		window.buildings[findBuildIndex(building.name)].firedEvents.push(building.event.indexOf(event))
+		// if(event.launched) return event;
 		switch (event.type) {
 			case "message": {
 				newMessage(event);
@@ -20,6 +22,7 @@ function launchEvent(event, amount) {
 				break;
 			}
 			case "achieve": {
+				// if (window.unlockedAchieve.includes(event.value)) return;
 				achieve(event, true);
 				break;
 			}
@@ -39,6 +42,7 @@ function launchChange(change) {
 	try {
 		if(Object.getOwnPropertyNames(change).length < 4) return console.warn("Does not have enough change attributes");
 		if(change.high === "gameStats") {
+			if (isNaN(change.by)) change.by = change.by()
 			switch (change.operation) {
 				case "multiply": {
 					window.gameStats[change.what][change.which] = window.gameStats[change.what][change.which]*change.by;
@@ -151,7 +155,7 @@ function achieve(event, notify) {
 				e.target.remove();
 			});
 			setTimeout(function(){
-				document.getElementById("achievebar").firstChild.remove();
+				fade(document.getElementById("achievebar"))
 			}, 1000*15);
 			document.getElementById("achievebar").appendChild(newAchieve);
 		}
@@ -160,7 +164,27 @@ function achieve(event, notify) {
 		achievementItem.title = event.extra;
 		achievementItem.classList.add("achievementlist")
 		document.getElementById("achievemodalcontent").appendChild(achievementItem);
-		window.unlockedAchieve.push(event)
+		window.unlockedAchieve.push(event.value)
 		return;
 	}catch(e){console.log(e)}
+}
+
+function randomLauncher(event) {
+	console.log(event)
+	let amountList = []
+	for (let i in event.changes) {
+		amountList.push((isNaN(event.changes[i].by))?event.changes[i].by():event.changes[i].by)
+		event.changes[i].by = amountList[i]
+		launchChange(event.changes[i])
+	}
+	document.getElementById("eventhead").textContent = event.name
+	for (let i in amountList) {
+		let finished = false
+		while (!finished) {
+			event.description = event.description.replace("{amount"+i+"}", amountList[i]);
+			finished = true;
+		}
+	}
+	document.getElementById("eventcontent").textContent = event.description
+	document.getElementById("eventcontainer").style.display = ""
 }

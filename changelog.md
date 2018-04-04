@@ -1,3 +1,13 @@
+# Update 0.0.12
+* Added google analytics, so that I can see how many people actually play the game
+* Fixed achievements being covered by footer
+* Fixed bug with achievements being launched more than once, after saving/reloading the game
+* Renamed the game to "Idle King" (still a temp. name, at least until I get something better. (Perhaps "King of Idle"?))
+* Added random event system (Currently just the plague)
+* Added a new font
+* Fixed the console spamming errors that didn't really affect the game at all
+* Fixed houses burning down not affecting max population
+
 # Update 0.0.11
 * Fixed favicon
 * Fixed Github/Discord icons
