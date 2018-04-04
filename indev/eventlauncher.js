@@ -41,8 +41,8 @@ function launchEvent(event, amount, building) {
 function launchChange(change) {
 	try {
 		if(Object.getOwnPropertyNames(change).length < 4) return console.warn("Does not have enough change attributes");
+		if (isNaN(change.by)) change.by = change.by()
 		if(change.high === "gameStats") {
-			if (isNaN(change.by)) change.by = change.by()
 			switch (change.operation) {
 				case "multiply": {
 					window.gameStats[change.what][change.which] = window.gameStats[change.what][change.which]*change.by;

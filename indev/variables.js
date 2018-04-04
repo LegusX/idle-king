@@ -93,7 +93,7 @@ try {
 						high: "buildings", //which global variable to change
 						what: "Wood Hut", //Name of building to change amount of
 						which: "amount",
-						by: ()=>{window.gameStats.workforce.max-(31*window.buildings[0].changes[0].by);return 31;}
+						by: ()=>{window.gameStats.workforce.max-=(31*window.buildings[0].changes[0].by);return 31;}
 					},
 					//0 based index
 				}

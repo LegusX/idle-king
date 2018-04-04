@@ -36,7 +36,7 @@ function setupWorkforce() {
 						if (window.gameStats.workforce.idle - amount < 0) return;
 						if (work.amount + amount > building.amount * building.workforce.maxchange) return newMessage({
 							type: "message",
-							value: "You need to another " + building.name + " to appoint more people to that job!"
+							value: "You need to build another " + building.name + " to appoint more people to that job!"
 						})
 						work.amount += amount;
 						window.buildings[window.buildingNames.indexOf(work.building)].workforce = work;
@@ -70,7 +70,7 @@ function setupWorkforce() {
 						if (window.gameStats.workforce.idle - amount < 0) return;
 						if (work.amount + amount > building.amount * building.workforce.maxchange) return newMessage({
 							type: "message",
-							value: "You need to another " + building.name + " to appoint more people to that job!"
+							value: "You need to build another " + building.name + " to appoint more people to that job!"
 						})
 						work.amount += amount;
 						window.buildings[window.buildingNames.indexOf(work.building)].workforce = work;
@@ -175,7 +175,7 @@ function createWork(item) {
 						if (window.gameStats.workforce.idle - amount < 0) return;
 						if (work.amount + amount > building.amount * building.workforce.maxchange) return newMessage({
 							type: "message",
-							value: "You need to another " + building.name + " to appoint more people to that job!"
+							value: "You need to build another " + building.name + " to appoint more people to that job!"
 						})
 						work.amount += amount;
 						window.buildings[window.buildingNames.indexOf(work.building)].workforce = work;
@@ -209,7 +209,7 @@ function createWork(item) {
 						if (window.gameStats.workforce.idle - amount < 0) return;
 						if (work.amount + amount > building.amount * building.workforce.maxchange) return newMessage({
 							type: "message",
-							value: "You need to another " + building.name + " to appoint more people to that job!"
+							value: "You need to build another " + building.name + " to appoint more people to that job!"
 						})
 						work.amount += amount;
 						window.buildings[window.buildingNames.indexOf(work.building)].workforce = work;

@@ -369,6 +369,11 @@ function setup() {
 					window.gameStats.workforce.total += moreVillagers
 					window.gameStats.workforce.idle += moreVillagers
 				}
+				for (let i in window.buildings) {
+					if (typeof window.buildings[i].workforce !== "undefined" && document.getElementById("worker" + window.buildings[i].workforce.name) !== null) {
+						document.getElementById("worker" + window.buildings[i].workforce.name).textContent = window.buildings[i].workforce.amount
+					}
+				}
 			} catch (e) {
 				console.log(e + "NOPE")
 			}
@@ -440,6 +445,7 @@ var loop = function () {
 				})
 			});
 		}
+		if (window.buildings.length > window.buildingNames.length) window.buildings.length = window.buildingNames.length;
 		Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function (item) {
 			// if(document.getElementById(item+"count") === null) {
 			// 	newResource = document.createElement("h4");
