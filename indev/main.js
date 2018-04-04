@@ -12,7 +12,6 @@ window.onload = function () {
 			if (e.key === "Enter") {
 				launchCommand();
 			} else if (e.key === "ArrowUp") {
-				console.log("hiya")
 				if (window.commandList.includes(document.getElementById("cmdline").value)) {
 					document.getElementById("cmdline").value = window.commandList[(window.commandList.indexOf(document.getElementById("cmdline").value) - 1 === -1) ? 0 : window.commandList.indexOf(document.getElementById("cmdline").value) - 1]
 				} else {
@@ -60,8 +59,6 @@ function newGame() {
 function loadGame(datas) {
 	try {
 		data = JSON.parse(datas);
-		console.log(data)
-		console.log(datas)
 		if (data.gameStats.version !== window.version) {
 			window.localStorage.removeItem("savedata");
 			alert("Hey there, sorry, but it looks like your current save data doesn't work with this version of the game! \n\nUnfortunately, backwards compatibility of game data is sketchy at best, so the game will automatically delete your save data now in order to not break anything. \n\nSorry about that. :/");
@@ -113,9 +110,11 @@ function loadGame(datas) {
 				newCounter.id = item.name + "count";
 				newCounter.textContent = item.name + ": " + item.amount;
 				document.getElementById("buildingcount").appendChild(newCounter);
-				for (var i = 0; i < item.event.length; i++) {
-					if (item.event[i].type === "newtab") {
-						editTab(item.event[i], item.amount);
+				if (typeof item.event !== "undefined") {
+					for (var i = 0; i < item.event.length; i++) {
+						if (item.event[i].type === "newtab") {
+							editTab(item.event[i], item.amount);
+						}
 					}
 				}
 			}
@@ -178,7 +177,6 @@ function setup() {
 			if (typeof eList[u].id !== "undefined") vanishList.push(eList[u].id)
 		}
 		vanishList.push()
-		console.log(vanishList)
 		vanishList.forEach(function (item) {
 			document.getElementById(item).style.display = "none";
 		});
@@ -513,10 +511,8 @@ var loop = function () {
 			for (var y = 0; y < kids.length; y++) {
 				var kid = kids[y]
 				if (!kid.id.includes("total") && !kid.id.includes("idle") && !kid.id.includes("-") && !kid.id.includes("+") && kid.id.replace("worker", "") !== "" && !kid.id.includes("name")) {
-					// console.log(findBuild(findWork(kid.id.replace("worker","")).owner))
 					var calc = findWork(kid.id.replace("worker", "")).maxchange * findBuild(findWork(kid.id.replace("worker", "")).owner).amount
 					document.getElementById(kid.id).max = (calc > findWork(kid.id.replace("worker", "")).amount + window.gameStats.workforce.idle) ? window.gameStats.workforce.idle + findBuild(findWork(kid.id.replace("worker", "")).owner).amount : calc
-					// console.log(calc > findWork(kid.id.replace("worker","")).amount+window.gameStats.workforce.idle)
 				}
 			}
 		}
@@ -525,13 +521,11 @@ var loop = function () {
 		}
 		if(window.gameStats.workforce.total < window.gameStats.workforce.idle+getWorkforceTotal()) {
 			let difference = window.gameStats.workforce.idle+getWorkforceTotal()-window.gameStats.workforce.total
-			console.log(difference)
 			if (window.gameStats.workforce.idle >= difference) window.gameStats.workforce.idle -= difference
 			else {
 				difference -= window.gameStats.workforce.idle
 				window.gameStats.workforce.idle = 0
 				for (let i in window.buildings) {
-					console.log(difference)
 					if (typeof window.buildings[i].workforce !== "undefined") {
 						// difference -= window.buildings[i].workforce.amount
 						console
@@ -561,11 +555,14 @@ window.addEventListener("keydown", function (e) {
 		})
 	}
 	if (e.key === "w") {
-		window.cheatLoop = setInterval(()=>{
-			Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function (item) {
-				window.gameStats.inventory[item] += 1000000
-			})
-		},250)
+		if(!cheatLoop) {
+			window.cheatLoop = setInterval(()=>{
+				Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function (item) {
+					window.gameStats.inventory[item] += 1000000
+				})
+			},250)
+			}
+		else clearInterval(window.cheatLoop)
 	}
 })
 

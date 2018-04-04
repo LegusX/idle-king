@@ -1,7 +1,7 @@
 try {
 	window.version = "0.0.12"
 	window.gameStats = {
-		resources: ["wood", "stone", "wheat", "science"],
+		resources: ["wood", "stone", "wheat", "science", "iron ore", "iron bar"],
 		upgradelist: [],
 		running: 1,
 		version: "0.0.12",
@@ -46,7 +46,7 @@ try {
 				base: 20 //This will never change and is the starting value for cost
 			}],
 			extra: 0,
-			multi: 1.1, //How much the resource costs should be multiplied by whenever a new building is bought
+			multi: 1.05, //How much the resource costs should be multiplied by whenever a new building is bought
 			launchedevents: [],
 			event: [{
 					type: "message", //which event to launch
@@ -152,7 +152,7 @@ try {
 				value: 40,
 				base: 40
 			}],
-			multi: 1.1,
+			multi: 1.05,
 			launchedevents: [],
 			event: [{
 					type: "message",
@@ -199,6 +199,29 @@ try {
 				},
 				building: "Mine"
 			},
+			upgrades: [
+				{
+					name:"Deeper Mines",
+					cost: 250,
+					unlocked: false,
+					building: "Mine",
+					override: [{
+						top: "workforce",
+						variable: "workchanges",
+						value: {
+							stone: 1,
+							wheat: -1,
+							"iron ore": 0.5
+						}
+					}],
+					event: [{
+						type: "message",
+						value: "Ignoring the troubled looks on your miner's faces, you send them deeper into the Earth",
+						when: 0,
+					}],
+					description: "Learn how to go deeper into the Earth, so as to reach the mystical substance 'iron'"
+				}
+			],
 			execute: function () {
 				try {
 					if (document.getElementById("gatherstone").style.display !== "none") return;
@@ -234,7 +257,7 @@ try {
 					base: 30
 				}
 			],
-			multi: 1.1,
+			multi: 1.05,
 			launchedevents: [],
 			event: [{
 					type: "message",
@@ -310,7 +333,7 @@ try {
 					base: 70
 				}
 			],
-			multi: 1.1,
+			multi: 1.05,
 			event: [{
 					type: "message",
 					value: "You know, as much as I hate those blasted wood huts of yours, you may be able to make them slightly better looking if you researched plans for better ones.",
@@ -326,7 +349,7 @@ try {
 			firedEvents: [],
 			workforce: {
 				name: "Librarians",
-				maxchange: 1,
+				maxchange: 3,
 				amount: 0,
 				maxwhat: "Librarians",
 				workchanges: {
@@ -356,6 +379,66 @@ try {
 				}],
 				description: "Learn how to make bigger libraries, that hold even more books, more knowledge, and bigger librarians. Because bigger is always better.\n\n\nI think?"
 			}]
+		},
+		{
+			name: "Blacksmith",
+			amount: 0,
+			max: 0,
+			unlocked: false,
+			resources: [
+				{
+					name: "wood",
+					value: 100,
+					base: 100
+				},
+				{
+					name: "stone",
+					value: 75,
+					base: 75,
+				}
+			],
+			multi: 1.05,
+			firedEvents: [],
+			workforce: {
+				name: "Blacksmiths",
+				maxchange: 1,
+				amount: 0,
+				maxwhat: "Blacksmiths",
+				workchanges: {
+					"iron ore": -2,
+					"iron bar": 1,
+					"wheat": -1
+				},
+				building: "Blacksmith"
+			},
+			upgrades: [
+				{
+					name: "Better Furnaces",
+					cost: 300,
+					unlocked: false,
+					building: "Blacksmith",
+					override: [
+						{
+							top: "workforce",
+							variable: "workchanges",
+							value: {
+								"iron ore": -1,
+								"iron bar": 1,
+								"wheat": -1
+							}
+						}
+					],
+					description: "Increases the efficiency of your furnaces so that they takes less iron ore to make an iron bar",
+					event:[
+						{
+							type: "message",
+							value: "Don't ask me how less iron ore = more iron bars. I have no idea either, so just roll with it.",
+							when: 0,
+							launched: false
+						}
+					]
+				}
+			]
 		}
 	];
 	
