@@ -1,4 +1,4 @@
-# Civ-Clicker
+# Idle King
 An idle game I started working on a little while ago, so don't expect great things just yet
 
 ## Discord Server
