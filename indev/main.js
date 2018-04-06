@@ -31,7 +31,7 @@ window.onload = function () {
 window.onclick = function (e) {
 	//This should take care of all modals, so long as they have the correct class
 	for (var i = 0; i < document.getElementsByClassName("modalcontainer").length; i++) {
-		if (document.getElementsByClassName("modalcontainer")[i].id === event.target.id) {
+		if (document.getElementsByClassName("modalcontainer")[i].id === e.target.id) {
 			e.target.style.display = "none";
 		}
 	}
