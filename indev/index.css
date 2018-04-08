@@ -137,6 +137,8 @@
 	margin-right: 5px;
 	vertical-align: top;
 	background-color: white;
+	max-height: calc(100% - 800px);
+	overflow:scroll;
 }
 #buildingcount {
 	box-shadow: 2px 2px 2px 2px #4d4d4d;
@@ -200,6 +202,7 @@ body {
 	width: 100%;
 	height: 100%;
 	font-family: 'Cormorant Garamond', serif;
+	overflow:hidden;
 }
 
 #settingsinput {
