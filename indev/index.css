@@ -137,7 +137,7 @@
 	margin-right: 5px;
 	vertical-align: top;
 	background-color: white;
-	max-height: calc(100% - 800px);
+	max-height: 80vh;
 	overflow:scroll;
 }
 #buildingcount {
