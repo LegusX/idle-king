@@ -1,4 +1,5 @@
 window.onload = function () {
+	console.log(window.tabchanger)
 	try {
 		setupBuildings()
 		window.commandList = [""]
@@ -45,6 +46,8 @@ function newGame() {
 		window.gameStats.selfincrements[item] = 0
 		window.gameStats.workincrements[item] = 0
 		window.gameStats.workforce.calc[item] = 0
+		window.gameStats.maxes[item] = 1
+		window.gameStats.maxmulti[item] = 100
 	})
 	var selfcollectable = ["wood", "wheat", "stone"]
 	selfcollectable.forEach(function (item) {
@@ -171,7 +174,7 @@ function setup() {
 		//because you're waiting for inspiration to hit you and tell you what you have been doing wrong this entire time with the code...
 		//Yeah.
 		//I should probably stop that...
-		let vanishList = ["notreadyrewards", "workers", "buildingcount", "home", "research", "construction", "inventory", "messagebar", "gatherstone", "gathergold", "gatherwheat", "mainresearch", "mainworkers"]
+		let vanishList = ["storage", "notreadyrewards", "workers", "buildingcount", "home", "research", "construction", "inventory", "messagebar", "gatherstone", "gathergold", "gatherwheat", "mainresearch", "mainworkers"]
 		let eList = document.querySelectorAll('[id$="container"]')
 		for (var u in eList) {
 			if (typeof eList[u].id !== "undefined") vanishList.push(eList[u].id)
@@ -343,7 +346,7 @@ function setup() {
 					if (typeof item === "undefined") return;
 					var canup = []
 					Object.getOwnPropertyNames(item.workchanges).forEach(function (sitem) {
-						if ((window.gameStats.inventory[sitem] + this.workchanges[sitem] * this.amount * window.gameStats.running) > 0) canup.push(true)
+						if ((window.gameStats.inventory[sitem] + this.workchanges[sitem] * this.amount * window.gameStats.running) > 0 && (window.gameStats.inventory[sitem] + this.workchanges[sitem] * this.amount * window.gameStats.running) <= window.gameStats.maxes[sitem]*window.gameStats.maxmulti[sitem]) canup.push(true)
 						else canup.push(false)
 					}, item)
 					if (!canup.includes(false)) {
@@ -457,6 +460,13 @@ var loop = function () {
 			// document.getElementById(item+"count").title = Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*window.gameStats.running)+" "+item+"/second";
 			// document.getElementById(item+"count").title = (window.gameStats.workforce.calc[item] === 0)?"0 "+item+"/second":window.gameStats.workforce.calc[item]
 		});
+		for (let i in window.researchables) {
+			let upgrade = window.researchables[i];
+			if (window.gameStats.inventory.science > upgrade.cost && !window.gameStats.upgradelist.includes(upgrade.name) && !upgrade.unlocked) {
+				window.researchables[i].unlocked = true
+				setupUpgrade(upgrade, i, false)
+			}
+		}
 		window.buildings.forEach(function (item) {
 			if (item.unlocked === true) {
 				var resourceList = "";
@@ -470,7 +480,7 @@ var loop = function () {
 						if (!item.upgrades[i].unlocked && !window.gameStats.upgradelist.includes(item.name)) {
 							window.buildings[getBuildingLocation(item.name)].upgrades[i].unlocked = true
 							var upgrade = item.upgrades[i]
-							setupUpgrade(upgrade, i)
+							setupUpgrade(upgrade, i, true)
 						}
 					}
 				}
@@ -548,7 +558,7 @@ var loop = function () {
 			}
 		}
 	} catch (e) {
-		console.log(e + "TET")
+		console.log(e + " Main Loop")
 	}
 	window.requestAnimationFrame(loop)
 }

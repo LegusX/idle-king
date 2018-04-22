@@ -253,51 +253,94 @@ function fade(element, t) {
 	return;
 }
 
-function setupUpgrade(upgrade, location) {
+function setupUpgrade(upgrade, location, building) {
 	try {
 		if (upgrade.cost < window.gameStats.inventory.science) {
-			if (document.getElementById("nothingtoupgrade").style.display !== "none") document.getElementById("nothingtoupgrade").style.display = "none"
-			if (document.getElementById("upgradelist").style.display === "none") document.getElementById("upgradelist").style.display = ""
-			if (document.getElementById(upgrade.name) === null) {
-				var upgradeinfo = document.createElement("p")
-				upgradeinfo.classList.add("resourcebuttons")
-				upgradeinfo.textContent = upgrade.name
-				upgradeinfo.id = upgrade.building + location
-				upgradeinfo.style.display = "block"
-				upgradeinfo.addEventListener("mouseover", function (e) {
-					var p = e.target
-					var upgrade = findBuild(p.id.substr(0, p.id.length - 1)).upgrades[p.id.split("")[p.id.length - 1]]
-					document.getElementById("upgradeinfotext").textContent = upgrade.description
-					document.getElementById("upgradeinfo").style.display = ""
-				})
-				upgradeinfo.addEventListener("mouseout", function (e) {
-					document.getElementById("upgradeinfo").style.display = "none"
-				})
-				upgradeinfo.addEventListener("click", function (e) {
-					try {
+			if (building) {
+				if (document.getElementById("nothingtoupgrade").style.display !== "none") document.getElementById("nothingtoupgrade").style.display = "none"
+				if (document.getElementById("upgradelist").style.display === "none") document.getElementById("upgradelist").style.display = ""
+				if (document.getElementById(upgrade.name) === null) {
+					let upgradeinfo = document.createElement("p")
+					upgradeinfo.classList.add("resourcebuttons")
+					upgradeinfo.textContent = upgrade.name
+					upgradeinfo.id = upgrade.building + location
+					upgradeinfo.style.display = "block"
+					upgradeinfo.addEventListener("mouseover", function (e) {
 						var p = e.target
-						var building = findBuild(p.id.substr(0, p.id.length - 1))
-						console.log(p.id.substr(0, p.id.length - 1))
-						var buildingNumber = getBuildingLocation(building.name)
-						var upgrade = building.upgrades[p.id.split("")[p.id.length - 1]]
-						if (upgrade.cost > window.gameStats.inventory.science) return;
-						else window.gameStats.inventory.science -= upgrade.cost
-						p.textContent = "Purchased!"
-						fade(p, true)
-						upgrade.override.forEach(function (item) {
-							if (typeof window.buildings[buildingNumber][item.top] !== "object") window.buildings[buildingNumber][item.top] = item.value
-							else window.buildings[buildingNumber][item.top][item.variable] = item.value
-							return;
-						})
-						upgrade.event.forEach(function(item){
-							launchEvent(item, 0, building);
-						})
-						window.gameStats.upgradelist.push(upgrade.name)
-					} catch (e) {
-						console.log(e)
-					}
-				})
-				document.getElementById("upgradelist").appendChild(upgradeinfo)
+						var upgrade = findBuild(p.id.substr(0, p.id.length - 1)).upgrades[p.id.split("")[p.id.length - 1]]
+						document.getElementById("upgradeinfotext").textContent = upgrade.description
+						document.getElementById("upgradeinfo").style.display = ""
+					})
+					upgradeinfo.addEventListener("mouseout", function (e) {
+						document.getElementById("upgradeinfo").style.display = "none"
+					})
+					upgradeinfo.addEventListener("click", function (e) {
+						try {
+							var p = e.target
+							var building = findBuild(p.id.substr(0, p.id.length - 1))
+							console.log(p.id.substr(0, p.id.length - 1))
+							var buildingNumber = getBuildingLocation(building.name)
+							var upgrade = building.upgrades[p.id.split("")[p.id.length - 1]]
+							if (upgrade.cost > window.gameStats.inventory.science) return;
+							else window.gameStats.inventory.science -= upgrade.cost
+							p.textContent = "Purchased!"
+							fade(p, true)
+							document.getElementById("upgradeinfo").style.display = "none";
+							upgrade.override.forEach(function (item) {
+								if (typeof window.buildings[buildingNumber][item.top] !== "object") window.buildings[buildingNumber][item.top] = item.value
+								else window.buildings[buildingNumber][item.top][item.variable] = item.value
+								return;
+							})
+							upgrade.event.forEach(function(item){
+								launchEvent(item, 0, building);
+							})
+							window.gameStats.upgradelist.push(upgrade.name)
+							if (document.getElementById("upgradelist").children.length < 2) document.getElementById("nothingtoupgrade").style.display = ""
+						} catch (e) {
+							console.log(e)
+						}
+					})
+					document.getElementById("upgradelist").appendChild(upgradeinfo)
+				}
+			}
+			else {
+				if (document.getElementById("nothingtoupgrade").style.display !== "none") document.getElementById("nothingtoupgrade").style.display = "none"
+				if (document.getElementById("upgradelist").style.display === "none") document.getElementById("upgradelist").style.display = ""
+				if (document.getElementById(upgrade.name) === null) {
+					let upgradeinfo = document.createElement("p");
+					upgradeinfo.classList.add("resourcebuttons")
+					upgradeinfo.textContent = upgrade.name
+					upgradeinfo.id = "RE" + location
+					upgradeinfo.style.display = "block";
+					upgradeinfo.addEventListener("mouseover", function (e) {
+						var p = e.target
+						var upgrade = window.researchables[p.id.replace("RE", "")]
+						document.getElementById("upgradeinfotext").textContent = upgrade.description
+						document.getElementById("upgradeinfo").style.display = ""
+					})
+					upgradeinfo.addEventListener("mouseout", function (e) {
+						document.getElementById("upgradeinfo").style.display = "none"
+					})
+					upgradeinfo.addEventListener("click", function (e) {
+						try {
+							var p = e.target
+							var upgrade = window.researchables[p.id.replace("RE", "")]
+							if (upgrade.cost > window.gameStats.inventory.science) return;
+							else window.gameStats.inventory.science -= upgrade.cost
+							p.textContent = "Purchased!"
+							fade(p, true)
+							document.getElementById("upgradeinfo").style.display = "none";
+							upgrade.event.forEach((item)=>{
+								launchEvent(item, 0, null);
+							})
+							window.gameStats.upgradelist.push(upgrade.name)
+							if (document.getElementById("upgradelist").children.length < 2) document.getElementById("nothingtoupgrade").style.display = ""
+						} catch (e) {
+							console.log(e+"upgrade")
+						}
+					})
+					document.getElementById("upgradelist").appendChild(upgradeinfo)
+				}
 			}
 		}
 	} catch (e) {

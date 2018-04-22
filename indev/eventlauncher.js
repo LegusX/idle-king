@@ -9,8 +9,10 @@
 function launchEvent(event, amount, building) {
 	try {
 		if(event.when !== amount || event.when === -1) return event;
-		if (building.firedEvents.includes(building.event.indexOf(event))) return;
-		window.buildings[findBuildIndex(building.name)].firedEvents.push(building.event.indexOf(event))
+		if (building !== null) {
+			if (building.firedEvents.includes(building.event.indexOf(event))) return;
+			window.buildings[findBuildIndex(building.name)].firedEvents.push(building.event.indexOf(event))
+		}
 		// if(event.launched) return event;
 		switch (event.type) {
 			case "message": {
@@ -188,3 +190,4 @@ function randomLauncher(event) {
 	document.getElementById("eventcontent").textContent = event.description
 	document.getElementById("eventcontainer").style.display = ""
 }
+

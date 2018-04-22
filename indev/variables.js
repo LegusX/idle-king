@@ -6,6 +6,8 @@ try {
 		running: 1,
 		version: "0.0.12",
 		inventory: {},
+		maxes: {},
+		maxmulti: {},
 		selfincrements: {},
 		workforce: {
 			total: 0,
@@ -457,7 +459,38 @@ try {
 				()=>{return window.gameStats.workforce.total/window.gameStats.workforce.max > 0.75},
 				()=>{return window.gameStats.workforce.total > 30}
 				],
-			chance: 2
+			chance: 100
+		}
+	]
+	
+	//Follows same format as upgrades... Maybe?
+	window.researchables = [
+		{
+			name: "Storage System",
+			cost: 50,
+			unlocked: false,
+			// building: "Blacksmith",
+			// override: [
+			// 	{
+			// 		top: "workforce",
+			// 		variable: "workchanges",
+			// 		value: {
+			// 			"iron ore": -1,
+			// 			"iron bar": 1,
+			// 			"wheat": -1
+			// 		}
+			// 	}
+			// ],
+			description: "Allows you to build storage buildings so you can have more junk.",
+			event:[
+				{
+					type: "newtab",
+					extra: "storage",
+					when: 0,
+					launched: false,
+					value: "Storage"
+				}
+			]
 		}
 	]
 
