@@ -11,6 +11,10 @@
     position: absolute;
 }
 
+.selectedDiv {
+	background-color: #D4D4D4;
+}
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }

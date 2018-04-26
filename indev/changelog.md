@@ -1,3 +1,9 @@
+# Update 0.1.0
+* Changed favicon
+* Added a bunch of new buildings
+* Added storage system
+* fixed a bunch of bugs from previous update
+
 # Update 0.0.12
 * Added google analytics, so that I can see how many people actually play the game
 * Fixed achievements being covered by footer

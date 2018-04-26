@@ -174,7 +174,7 @@ function setup() {
 		//because you're waiting for inspiration to hit you and tell you what you have been doing wrong this entire time with the code...
 		//Yeah.
 		//I should probably stop that...
-		let vanishList = ["storage", "notreadyrewards", "workers", "buildingcount", "home", "research", "construction", "inventory", "messagebar", "gatherstone", "gathergold", "gatherwheat", "mainresearch", "mainworkers"]
+		let vanishList = ["header", "storage", "notreadyrewards", "workers", "buildingcount", "home", "research", "construction", "inventory", "messagebar", "gatherstone", "gathergold", "gatherwheat", "mainresearch", "mainworkers"]
 		let eList = document.querySelectorAll('[id$="container"]')
 		for (var u in eList) {
 			if (typeof eList[u].id !== "undefined") vanishList.push(eList[u].id)
@@ -285,7 +285,7 @@ function setup() {
 			document.getElementById("settingsmodalcontainer").style.display = "none";
 		});
 		document.getElementById("maxmessages").value = 15;
-		document.getElementById("settingsversion").textContent = "Idle King, Version "+window.version
+		document.getElementById("settingsversion").textContent = "Idle King, Version " + window.version
 		document.getElementById("dimensionstext").textContent = `Window dimensions: ${window.innerWidth}x${window.innerHeight}`
 
 		Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function (item) {
@@ -322,8 +322,7 @@ function setup() {
 			if (input.value.length > 12) {
 				alert("Your name must be 12 characters or less!");
 				return window.RGV.namepicker = false
-			}
-			else {
+			} else {
 				window.gameStats.name = input.value
 				document.getElementById("newgamecontainer").style.display = "none"
 				document.title = "Idle King - " + input.value
@@ -331,6 +330,7 @@ function setup() {
 			}
 		})
 
+		document.getElementById("home").classList.add("selectedDiv")
 		window.incrementer = setInterval(function () {
 			try {
 
@@ -346,7 +346,7 @@ function setup() {
 					if (typeof item === "undefined") return;
 					var canup = []
 					Object.getOwnPropertyNames(item.workchanges).forEach(function (sitem) {
-						if ((window.gameStats.inventory[sitem] + this.workchanges[sitem] * this.amount * window.gameStats.running) > 0 && (window.gameStats.inventory[sitem] + this.workchanges[sitem] * this.amount * window.gameStats.running) <= window.gameStats.maxes[sitem]*window.gameStats.maxmulti[sitem]) canup.push(true)
+						if ((window.gameStats.inventory[sitem] + this.workchanges[sitem] * this.amount * window.gameStats.running) > 0 && (window.gameStats.inventory[sitem] + this.workchanges[sitem] * this.amount * window.gameStats.running) <= window.gameStats.maxes[sitem] * window.gameStats.maxmulti[sitem]) canup.push(true)
 						else canup.push(false)
 					}, item)
 					if (!canup.includes(false)) {
@@ -357,10 +357,10 @@ function setup() {
 				});
 				// window.gameStats.inventory[item] += Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*window.gameStats.running);
 				window.misc.time++
-				if (window.misc.time > 1800 && !window.misc.advertise) {
-					document.getElementById("rewardadcontainer").style.display = ""
-					window.misc.advertise = true
-				}
+					if (window.misc.time > 1800 && !window.misc.advertise) {
+						document.getElementById("rewardadcontainer").style.display = ""
+						window.misc.advertise = true
+					}
 				if (getRandomInt(0, 10) === 4 && document.getElementById("workers").style.display !== "none" && window.gameStats.workforce.total < window.gameStats.workforce.max) {
 					moreVillagers = getRandomInt(1, 5 >= window.gameStats.workforce.max - window.gameStats.workforce.total ? window.gameStats.workforce.max - window.gameStats.workforce.total + 1 : 6)
 					if (moreVillagers + window.gameStats.workforce.total > window.gameStats.workforce.max) moreVillagers = window.gameStats.workforce.max - window.gameStats.workforce.total
@@ -381,9 +381,9 @@ function setup() {
 				console.log(e + "NOPE")
 			}
 		}, 1000);
-		
+
 		//fires once a minute
-		window.randomEvent = setInterval(function(){
+		window.randomEvent = setInterval(function () {
 			for (var i in window.randomEvents) {
 				let event = window.randomEvents[i]
 				let reqs = []
@@ -440,26 +440,17 @@ var loop = function () {
 			window.buildings.forEach(function (item) {
 				if (typeof item.workforce === "undefined") return;
 				item = item.workforce
-				// if (window.gameStats.workforce[item] === 0) return;
-				// window.gameStats.inventory[item] += Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*(Date.now()-window.lastFocus)*window.gameStats.running);
-				// window.misc.time+=(Date.now()-window.lastFocus);
 				Object.getOwnPropertyNames(item.workchanges).forEach(function (sitem) {
 					window.gameStats.inventory[sitem] += Math.floor(item.workchanges[sitem] * amount * (Date.now() - window.lastFocus) * window.gameStats.running)
 				})
 			});
 		}
 		if (window.buildings.length > window.buildingNames.length) window.buildings.length = window.buildingNames.length;
+
 		Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function (item) {
-			// if(document.getElementById(item+"count") === null) {
-			// 	newResource = document.createElement("h4");
-			// 	newResource.id = item+"count";
-			// 	newResource.textContent = item.replace(item[0], item[0].toUpperCase())+": 0";
-			// 	document.getElementById("inventory").appendChild(newResource);
-			// }
 			if (document.getElementById(item + "count").style.display === "none" && window.gameStats.inventory[item] > 0) document.getElementById(item + "count").style.display = ""
-			// document.getElementById(item+"count").title = Math.floor(window.gameStats.workforce[item]*window.gameStats.workincrements[item]*window.gameStats.running)+" "+item+"/second";
-			// document.getElementById(item+"count").title = (window.gameStats.workforce.calc[item] === 0)?"0 "+item+"/second":window.gameStats.workforce.calc[item]
 		});
+
 		for (let i in window.researchables) {
 			let upgrade = window.researchables[i];
 			if (window.gameStats.inventory.science > upgrade.cost && !window.gameStats.upgradelist.includes(upgrade.name) && !upgrade.unlocked) {
@@ -467,6 +458,9 @@ var loop = function () {
 				setupUpgrade(upgrade, i, false)
 			}
 		}
+		
+		if (document.getElementById("header").style.display === "none" && window.buildings[0].amount > 0) document.getElementById("header").style.display = "";
+
 		window.buildings.forEach(function (item) {
 			if (item.unlocked === true) {
 				var resourceList = "";
@@ -488,10 +482,10 @@ var loop = function () {
 				// return;
 			}
 			if (item.amount > 0 && typeof item.workforce !== "undefined") {
-				document.getElementById("worker"+item.workforce.name+"+").style.display = ""
-				document.getElementById("worker"+item.workforce.name+"-").style.display = ""
-				document.getElementById("worker"+item.workforce.name).style.display = ""
-				document.getElementById("workername"+item.workforce.name).style.display = ""
+				document.getElementById("worker" + item.workforce.name + "+").style.display = ""
+				document.getElementById("worker" + item.workforce.name + "-").style.display = ""
+				document.getElementById("worker" + item.workforce.name).style.display = ""
+				document.getElementById("workername" + item.workforce.name).style.display = ""
 			}
 			var unlocked = []
 			item.resources.forEach(function (resource) {
@@ -516,9 +510,11 @@ var loop = function () {
 				}
 			}
 		});
+
 		Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function (item) {
 			document.getElementById(item + "count").textContent = item + ": " + window.gameStats.inventory[item]
-		})
+		});
+
 		document.getElementById("workertotal").textContent = "Total: " + window.gameStats.workforce.total
 		document.getElementById("workeridle").textContent = "Idle: " + window.gameStats.workforce.idle
 
@@ -532,11 +528,13 @@ var loop = function () {
 				}
 			}
 		}
+
 		if (window.gameStats.workforce.total > window.gameStats.workforce.max) {
 			window.gameStats.workforce.total = window.gameStats.workforce.max
 		}
-		if(window.gameStats.workforce.total < window.gameStats.workforce.idle+getWorkforceTotal()) {
-			let difference = window.gameStats.workforce.idle+getWorkforceTotal()-window.gameStats.workforce.total
+
+		if (window.gameStats.workforce.total < window.gameStats.workforce.idle + getWorkforceTotal()) {
+			let difference = window.gameStats.workforce.idle + getWorkforceTotal() - window.gameStats.workforce.total
 			if (window.gameStats.workforce.idle >= difference) window.gameStats.workforce.idle -= difference
 			else {
 				difference -= window.gameStats.workforce.idle
@@ -548,8 +546,7 @@ var loop = function () {
 						if (difference - window.buildings[i].workforce.amount < 0) {
 							window.buildings[i].workforce.amount -= difference
 							difference = 0
-						}
-						else {
+						} else {
 							difference -= window.buildings[i].workforce.amount
 							window.buildings[i].workforce.amount = 0
 						}
@@ -571,14 +568,13 @@ window.addEventListener("keydown", function (e) {
 		})
 	}
 	if (e.key === "w") {
-		if(!cheatLoop) {
-			window.cheatLoop = setInterval(()=>{
+		if (!cheatLoop) {
+			window.cheatLoop = setInterval(() => {
 				Object.getOwnPropertyNames(window.gameStats.inventory).forEach(function (item) {
 					window.gameStats.inventory[item] += 1000000
 				})
-			},250)
-			}
-		else clearInterval(window.cheatLoop)
+			}, 250)
+		} else clearInterval(window.cheatLoop)
 	}
 })
 
